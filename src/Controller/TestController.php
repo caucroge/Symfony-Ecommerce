@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 class TestController
 {
     public function index()
@@ -10,8 +13,17 @@ class TestController
         die();
     }
 
-    public function test()
+    public function test(Request $request)
     {
-        dd("Deuxieme route : test ! ");
+        // $age = 0;
+        // if( !empty( $_GET['age'] ) )
+        // {
+        //     $age= $_GET['age'];
+        // }
+
+        dump($request);
+
+        $age = $request->query->get('age', 0);
+        return new Response("Vous avez $age ans");
     }
 }

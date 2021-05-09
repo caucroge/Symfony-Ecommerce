@@ -4,26 +4,20 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class TestController
 {
+    #[Route('/', name: 'index')]
     public function index()
     {
         var_dump("Premier controleur !");
         die();
     }
 
+    #[Route('/test/{age<\d+>?0}', name:'test', methods:['GET'], host: '127.0.0.1', shemes: ['https'])]
     public function test(Request $request, $age)
     {
-        // $age = 0;
-        // if( !empty( $_GET['age'] ) )
-        // {
-        //     $age= $_GET['age'];
-        // }
-        
-        // dump($request);
-        // $age = $request->attributes->get('age');
-
         return new Response("Vous avez $age ans");
     }
 }

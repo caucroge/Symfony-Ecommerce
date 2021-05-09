@@ -13,17 +13,17 @@ class TestController
         die();
     }
 
-    public function test(Request $request)
+    public function test(Request $request, $age)
     {
         // $age = 0;
         // if( !empty( $_GET['age'] ) )
         // {
         //     $age= $_GET['age'];
         // }
+        
+        // dump($request);
+        // $age = $request->attributes->get('age');
 
-        dump($request);
-
-        $age = $request->query->get('age', 0);
         return new Response("Vous avez $age ans");
     }
 }

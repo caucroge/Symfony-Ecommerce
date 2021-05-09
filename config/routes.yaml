@@ -5,6 +5,13 @@ index:
 test:
    path: /test/{age<\d+>?0}
    controller: App\Controller\TestController::test
+   
+  #  Contraintes qui pesent sur la route
+   methods: [GET, POST]
+   host: 127.0.0.1
+   schemes: [https]
+
+  #  Contraintes qui pesent sur les paramètres
   #  defaults:
   #   age: 0
   #  requirements:

@@ -15,7 +15,7 @@ class TestController
         die();
     }
 
-    #[Route('/test/{age<\d+>?0}', name:'test', methods:['GET'], host: '127.0.0.1', shemes: ['https'])]
+    #[Route('/test/{age<\d+>?0}', name:'test', methods:['GET'], host: '127.0.0.1', schemes: ['https'])]
     public function test(Request $request, $age)
     {
         return new Response("Vous avez $age ans");

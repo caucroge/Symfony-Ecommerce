@@ -8,5 +8,23 @@
 </head>
 <body>
     <h1>Hello {{prenom}} !</h1>
+    <h1>Vous avez {{age}} !</h1>
+    {% if age >= 18 %}
+        Vous êtes un adulte.
+    {% else %}
+        Vous êtes mineur.
+    {% endif %}
+
+    <ul>
+    {% for i in 1..10 %}
+        <li>{{i}}</li>
+    {% endfor %}
+    </ul>
+
+    <ul>
+    {% for prenom in prenoms %}
+        <li>{{prenom | upper}}</li>
+    {% endfor %}
+    </ul>
 </body>
 </html>

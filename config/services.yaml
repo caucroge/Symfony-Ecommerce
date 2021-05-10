@@ -32,3 +32,5 @@ services:
     App\Taxes\Calculator:
         arguments:
             $tva: 20
+
+    Cocur\Slugify\Slugify: ~

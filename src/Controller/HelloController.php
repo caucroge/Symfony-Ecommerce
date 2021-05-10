@@ -13,14 +13,9 @@ class HelloController
     {
         $html = $twig->render('hello.html.twig', [
             'prenom' => $prenom,
-            'age' => 17,
-            'prenoms' => [
-                'Roger',
-                'Mathieu',
-                'Marina'
-            ]
+            'ages' => [12,18,29,15]
         ]);
-        
+
         return new Response($html);
     }
 }

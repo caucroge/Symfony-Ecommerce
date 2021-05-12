@@ -22,17 +22,12 @@ final class Version20210512121030 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SEQUENCE category_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE category (id INT NOT NULL, name VARCHAR(255) NOT NULL, slug VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('ALTER TABLE product ALTER id DROP DEFAULT');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('DROP SEQUENCE category_id_seq CASCADE');
         $this->addSql('DROP TABLE category');
-        $this->addSql('CREATE SEQUENCE product_id_seq');
-        $this->addSql('SELECT setval(\'product_id_seq\', (SELECT MAX(id) FROM product))');
-        $this->addSql('ALTER TABLE product ALTER id SET DEFAULT nextval(\'product_id_seq\')');
     }
 }

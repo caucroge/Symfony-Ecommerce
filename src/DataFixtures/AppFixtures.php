@@ -2,20 +2,23 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
 use App\Entity\Product;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
+        $faker = Factory::create('fr_FR');
+
         for($i = 0; $i < 100; $i++)
         {
             $product = new Product;
-            $product->setName("Produit n°$i")
+            $product->setName($faker->sentence())
                     ->setPrice(mt_rand(100,200))
-                    ->setSlug("Produit-n-$i");
+                    ->setSlug($faker->slug());
             $manager->persist($product);
         }
         

@@ -11,22 +11,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class HomePageController extends AbstractController
 {
     #[Route("/", name: "homepageIndex")]
-    public function index(EntityManagerInterface $em)
+    public function index(ProductRepository $productRepository)
     {
-        // $product = new Product;
-        // $product->setName("Chaise en plasique")
-        //         ->setPrice(1500)
-        //         ->setSlug("Chaise-en-plastique");
-        // $em->persist($product);
+        $products = $productRepository->findBy([], [], 3);
 
-        $productRepository = $em->getRepository(Product::class);
-        $product = $productRepository->find(3);
-        // $product->setPrice(2500);
-        // $em->flush();
-
-        $em->remove($product);
-        $em->flush();
-
-        return $this->render('homepage/index.html.twig');
+        return $this->render('homepage/index.html.twig', [
+            'products' => $products
+        ]);
     }
 }

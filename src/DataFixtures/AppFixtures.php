@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use Faker\Factory;
 use App\Entity\Product;
 use Liior\Faker\Prices;
@@ -25,15 +26,28 @@ class AppFixtures extends Fixture
         $faker->addProvider(new Prices($faker));
         $faker->addProvider(new Commerce($faker));
 
-        for($i = 0; $i < 100; $i++)
-        {
-            $product = new Product;
-            $product->setName($faker->productName())
+        for ($i = 0; $i < 3; $i++) {
+            $category = new Category();
+            $category
+                ->setName($faker->word())
+                ->setSlug(
+                    strtolower($this->slugger->slug($category->getName()))
+                );
+            $manager->persist($category);
+
+            for ($j = 0; $j < mt_rand(0, 10); $j++) {
+                $product = new Product();
+                $product
+                    ->setName($faker->productName())
                     ->setPrice($faker->price(4000, 20000))
-                    ->setSlug(strtolower($this->slugger->slug($product->getName())));
-            $manager->persist($product);
+                    ->setSlug(
+                        strtolower($this->slugger->slug($product->getName()))
+                    )
+                    ->setCategory($category);
+                $manager->persist($product);
+            }
         }
-        
+
         $manager->flush();
     }
 }

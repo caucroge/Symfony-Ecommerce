@@ -2,17 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ProductController extends AbstractController
+class CategoryController extends AbstractController
 {
-    #[Route('/{slug}', name: 'product_category')]
-    public function Category($slug, CategoryRepository $categoryRepository): Response
+    #[Route('/category/{slug}', name: 'category_slug')]
+    public function categorySlug($slug, CategoryRepository $categoryRepository): Response
     {
         $category = $categoryRepository->findOneBy(
             [
@@ -25,7 +23,7 @@ class ProductController extends AbstractController
         }
 
         return $this->render(
-            'product/category.html.twig',
+            'category/categorySlug.html.twig',
             [
                 'category' => $category,
             ]

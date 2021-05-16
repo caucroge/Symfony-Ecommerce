@@ -8,6 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ProductController extends AbstractController
 {
@@ -40,10 +44,39 @@ class ProductController extends AbstractController
         $builder = $factory->createBuilder();
 
         $builder
-            ->add('name')
-            ->add('shortDescription')
-            ->add('price')
-            ->add('category');
+            ->add(
+                'name',
+                TextType::class,
+                [
+                    'label' => 'Nom du produit',
+                    'attr' => ['class' => 'form-control', 'placeholder' => 'Nom du produit']
+                ]
+            )
+            ->add(
+                'shortDescription',
+                TextareaType::class,
+                [
+                    'label' => 'Description courte',
+                    'attr' => ["class" => 'form-control', "placeholder" => "Description courte mais parlante pour l'utilisateur"]
+                ]
+            )
+            ->add(
+                'price',
+                MoneyType::class,
+                [
+                    "label" => "Prix du produit",
+                    "attr" => ["class" => 'form-control', "placeholder" => "Prix du produit en €"]
+                ]
+            )
+            ->add(
+                'category',
+                ChoiceType::class,
+                [
+                    "label" => "Catégorie",
+                    "attr" => ["class" => "form-control"],
+                    "placeholder" => "Choisir une catégorie"
+                ]
+            );
 
         $form = $builder->getForm();
         $formView = $form->createView();

@@ -48,7 +48,7 @@ class ProductController extends AbstractController
                 TextType::class,
                 [
                     'label' => 'Nom du produit',
-                    'attr' => ['class' => 'form-control', 'placeholder' => 'Nom du produit']
+                    'attr' => ['placeholder' => 'Nom du produit']
                 ]
             )
             ->add(
@@ -56,7 +56,7 @@ class ProductController extends AbstractController
                 TextareaType::class,
                 [
                     'label' => 'Description courte',
-                    'attr' => ["class" => 'form-control', "placeholder" => "Description courte mais parlante pour l'utilisateur"]
+                    'attr' => ["placeholder" => "Description courte mais parlante pour l'utilisateur"]
                 ]
             )
             ->add(
@@ -64,7 +64,7 @@ class ProductController extends AbstractController
                 MoneyType::class,
                 [
                     "label" => "Prix du produit",
-                    "attr" => ["class" => 'form-control', "placeholder" => "Prix du produit en €"]
+                    "attr" => ["placeholder" => "Prix du produit en €"]
                 ]
             )
             ->add(
@@ -72,7 +72,6 @@ class ProductController extends AbstractController
                 EntityType::class,
                 [
                     "label" => "Catégorie",
-                    "attr" => ["class" => "form-control"],
                     "placeholder" => "Choisir une catégorie",
                     "class" => Category::class,
                     "choice_label" => function (Category $category) {

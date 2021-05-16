@@ -9,8 +9,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends AbstractController
 {
-    #[Route('/category/{slug}', name: 'show_category_products_slug')]
-    public function showCategoryProductsSlug(
+    #[Route('/category/read/{slug}', name: 'category_read_slug')]
+    public function readSlug(
         $slug,
         CategoryRepository $categoryRepository,
     ): Response {

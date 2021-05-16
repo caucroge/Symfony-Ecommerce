@@ -9,8 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProductController extends AbstractController
 {
-    #[Route('/product/{slug}', name: 'show_product_slug')]
-    public function showProdutSlug(
+    #[Route('/product/read/{slug}', name: 'product_read_slug')]
+    public function readSlug(
         $slug,
         ProductRepository $productRepository,
     ): Response {
@@ -30,5 +30,11 @@ class ProductController extends AbstractController
                 'product' => $product
             ]
         );
+    }
+
+    #[Route('/product/create', name: "product_create")]
+    public function create()
+    {
+        return $this->render("product/create.html.twig");
     }
 }

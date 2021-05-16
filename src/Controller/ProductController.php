@@ -64,7 +64,7 @@ class ProductController extends AbstractController
                 MoneyType::class,
                 [
                     "label" => "Prix du produit",
-                    "attr" => ["placeholder" => "Prix du produit en €"]
+                    "attr" => ["placeholder" => "Prix du produit"]
                 ]
             )
             ->add(

@@ -10,8 +10,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends AbstractController
 {
     #[Route('/category/{slug}', name: 'show_category_products_slug')]
-    public function showCategoryProductsSlug($slug, CategoryRepository $categoryRepository): Response
-    {
+    public function showCategoryProductsSlug(
+        $slug,
+        CategoryRepository $categoryRepository,
+    ): Response {
         $category = $categoryRepository->findOneBy(
             [
                 'slug' => $slug
@@ -25,7 +27,7 @@ class CategoryController extends AbstractController
         return $this->render(
             'category/showCategoryProductsSlug.html.twig',
             [
-                'category' => $category,
+                'category' => $category
             ]
         );
     }

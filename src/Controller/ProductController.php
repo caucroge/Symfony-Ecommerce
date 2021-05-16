@@ -10,8 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ProductController extends AbstractController
 {
     #[Route('/product/{slug}', name: 'show_product_slug')]
-    public function showProdutSlug($slug, ProductRepository $productRepository): Response
-    {
+    public function showProdutSlug(
+        $slug,
+        ProductRepository $productRepository,
+    ): Response {
         $product = $productRepository->findOneBy(
             [
                 'slug' => $slug
@@ -25,7 +27,7 @@ class ProductController extends AbstractController
         return $this->render(
             'product/showProductSlug.html.twig',
             [
-                'product' => $product,
+                'product' => $product
             ]
         );
     }

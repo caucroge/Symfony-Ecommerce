@@ -6,8 +6,21 @@
 
 {% block body %}
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Accueil</a></li>
-    <li class="breadcrumb-item"><a href="#">{{ product.category.name }}</a></li>
+    <li class="breadcrumb-item">
+      <a href="{{ path('homepageIndex') }}">Accueil</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{
+        path(
+          'show_category_products_slug',
+          {
+            slug: product.category.name
+          }
+        )
+        }}">
+        {{ product.category.name }}
+      </a>
+    </li>
     <li class="breadcrumb-item active">{{ product.name }}</li>
   </ol>
   <h1>

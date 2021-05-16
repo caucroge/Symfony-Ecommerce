@@ -5,9 +5,11 @@
 {% endblock %}
 
 {% block body %}
-  <h1>
-    Catégorie : {{ category.name }}
-  </h1>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+    <li class="breadcrumb-item active">{{ category.name }}</li>
+  </ol>
+
   <div class="row">
     {% for product in category.products %}
       {% include 'shared/_cardProduct.html.twig' with {

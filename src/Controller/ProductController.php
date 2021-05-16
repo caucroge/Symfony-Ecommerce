@@ -3,13 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Category;
-use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -40,7 +39,7 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/create', name: "product_create")]
-    public function create(FormFactoryInterface $factory, CategoryRepository $categoryRepository)
+    public function create(FormFactoryInterface $factory)
     {
         $builder = $factory->createBuilder();
         $builder
@@ -67,21 +66,19 @@ class ProductController extends AbstractController
                     "label" => "Prix du produit",
                     "attr" => ["class" => 'form-control', "placeholder" => "Prix du produit en €"]
                 ]
-            );
-
-        $options = [];
-        foreach ($categoryRepository->findAll() as $category) {
-            $options[$category->getName()] = $category->getId();
-        }
-        $builder
+            )
             ->add(
                 'category',
-                ChoiceType::class,
+                EntityType::class,
                 [
                     "label" => "Catégorie",
                     "attr" => ["class" => "form-control"],
                     "placeholder" => "Choisir une catégorie",
-                    "choices" => $options
+                    "class" => Category::class,
+                    "choice_label" => function (Category $category) {
+                        return strtoupper($category->getName());
+                    }
+
                 ]
             );
 

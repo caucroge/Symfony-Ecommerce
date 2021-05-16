@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Catégorie : {{ category.name }}
+{% endblock %}
+
+{% block body %}
+  <h1>
+    Catégorie : {{ category.name }}
+  </h1>
+  <div class="row">
+    {% for product in category.products %}
+      {% include 'shared/_cardProduct.html.twig' with {
+        col: 4
+      } %}
+    {% endfor %}
+  </div>
+{% endblock %}

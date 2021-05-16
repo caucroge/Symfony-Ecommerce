@@ -37,7 +37,7 @@ class AppFixtures extends Fixture
                 );
             $manager->persist($category);
 
-            for ($j = 0; $j < mt_rand(0, 10); $j++) {
+            for ($j = 0; $j < mt_rand(2, 10); $j++) {
                 $product = new Product();
                 $product
                     ->setName($faker->productName())

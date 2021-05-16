@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProductController extends AbstractController
@@ -33,8 +35,24 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/create', name: "product_create")]
-    public function create()
+    public function create(FormFactoryInterface $factory)
     {
-        return $this->render("product/create.html.twig");
+        $builder = $factory->createBuilder();
+
+        $builder
+            ->add('name')
+            ->add('shortDescription')
+            ->add('price')
+            ->add('category');
+
+        $form = $builder->getForm();
+        $formView = $form->createView();
+
+        return $this->render(
+            "product/create.html.twig",
+            [
+                'formview' => $formView
+            ]
+        );
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,10 +40,9 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/create', name: "product_create")]
-    public function create(FormFactoryInterface $factory)
+    public function create(FormFactoryInterface $factory, CategoryRepository $categoryRepository)
     {
         $builder = $factory->createBuilder();
-
         $builder
             ->add(
                 'name',
@@ -67,14 +67,21 @@ class ProductController extends AbstractController
                     "label" => "Prix du produit",
                     "attr" => ["class" => 'form-control', "placeholder" => "Prix du produit en €"]
                 ]
-            )
+            );
+
+        $options = [];
+        foreach ($categoryRepository->findAll() as $category) {
+            $options[$category->getName()] = $category->getId();
+        }
+        $builder
             ->add(
                 'category',
                 ChoiceType::class,
                 [
                     "label" => "Catégorie",
                     "attr" => ["class" => "form-control"],
-                    "placeholder" => "Choisir une catégorie"
+                    "placeholder" => "Choisir une catégorie",
+                    "choices" => $options
                 ]
             );
 

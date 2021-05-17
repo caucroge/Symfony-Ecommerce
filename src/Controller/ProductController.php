@@ -9,9 +9,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ProductController extends AbstractController
 {
@@ -39,16 +39,26 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/create', name: "product_create")]
-    public function create(Request $request, SluggerInterface $string, EntityManagerInterface $em)
-    {
+    public function create(
+        Request $request,
+        SluggerInterface $string,
+        EntityManagerInterface $em
+    ) {
         $product = new Product;
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+
             $product->setSlug(strtolower($string->slug($product->getName())));
+            $product->setPrice($product->getPrice() * 100);
+
             $em->persist($product);
             $em->flush();
+
+            return $this->redirectToRoute('product_read_slug', [
+                'slug' => $product->getSlug()
+            ]);
         }
 
         $formView = $form->createView();
@@ -62,16 +72,28 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/update/{id}', name: "product_update_id")]
-    public function updateId($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, SluggerInterface $string)
-    {
+    public function updateId(
+        $id,
+        ProductRepository $productRepository,
+        Request $request,
+        EntityManagerInterface $em,
+        SluggerInterface $string
+    ) {
         $product = $productRepository->find($id);
-        dump($product);
+
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+
             $product->setSlug(strtolower($string->slug($product->getName())));
+            $product->setPrice($product->getPrice() * 100);
+
             $em->flush();
+
+            return $this->redirectToRoute('product_read_slug', [
+                'slug' => $product->getSlug()
+            ]);
         }
 
         $formView = $form->createView();

@@ -3,20 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Product;
-use App\Entity\Category;
+use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProductController extends AbstractController
@@ -47,55 +42,7 @@ class ProductController extends AbstractController
     #[Route('/product/create', name: "product_create")]
     public function create(FormFactoryInterface $factory, Request $request, SluggerInterface $string, EntityManagerInterface $em)
     {
-        $builder = $factory->createBuilder(FormType::class, null, [
-            'data_class' => Product::class,
-        ]);
-        $builder
-            ->add(
-                'name',
-                TextType::class,
-                [
-                    'label' => 'Nom du produit',
-                    'attr' => ['placeholder' => 'Nom du produit']
-                ]
-            )
-            ->add(
-                'shortDescription',
-                TextareaType::class,
-                [
-                    'label' => 'Description courte',
-                    'attr' => ["placeholder" => "Description courte mais parlante pour l'utilisateur"]
-                ]
-            )
-            ->add(
-                'price',
-                MoneyType::class,
-                [
-                    "label" => "Prix du produit",
-                    "attr" => ["placeholder" => "Prix du produit"]
-                ]
-            )
-            ->add(
-                'mainPicture',
-                UrlType::class,
-                [
-                    "label" => "Image du produit",
-                    "attr" => ["placeholder" => "Url d'une image"]
-                ]
-            )
-            ->add(
-                'category',
-                EntityType::class,
-                [
-                    "label" => "Catégorie",
-                    "placeholder" => "Choisir une catégorie",
-                    "class" => Category::class,
-                    "choice_label" => function (Category $category) {
-                        return strtoupper($category->getName());
-                    }
-
-                ]
-            );
+        $builder = $factory->createBuilder(ProductType::class);
 
         $form = $builder->getForm();
         $form->handleRequest($request);

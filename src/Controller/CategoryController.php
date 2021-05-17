@@ -31,4 +31,25 @@ class CategoryController extends AbstractController
             ]
         );
     }
+
+    #[Route('/category/create', name: "category_create")]
+    public function create()
+    {
+        return $this->render(
+            'category/create.html.twig'
+        );
+    }
+
+    #[Route('/category/update/{id}', name: "category_update_id")]
+    public function update($id, CategoryRepository $categoryRepository)
+    {
+        $category = $categoryRepository->find($id);
+
+        return $this->render(
+            'category/update.html.twig',
+            [
+                'category' => $category
+            ]
+        );
+    }
 }

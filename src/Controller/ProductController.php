@@ -10,10 +10,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ProductController extends AbstractController
 {
@@ -41,9 +44,11 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/create', name: "product_create")]
-    public function create(FormFactoryInterface $factory, Request $request)
+    public function create(FormFactoryInterface $factory, Request $request, SluggerInterface $string)
     {
-        $builder = $factory->createBuilder();
+        $builder = $factory->createBuilder(FormType::class, null, [
+            'data_class' => Product::class,
+        ]);
         $builder
             ->add(
                 'name',
@@ -70,6 +75,14 @@ class ProductController extends AbstractController
                 ]
             )
             ->add(
+                'mainPicture',
+                UrlType::class,
+                [
+                    "label" => "Image du produit",
+                    "attr" => ["placeholder" => "Url d'une image"]
+                ]
+            )
+            ->add(
                 'category',
                 EntityType::class,
                 [
@@ -87,14 +100,10 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $data = $form->getData();
-            $product = new Product;
-            $product
-                ->setName($data['name'])
-                ->setPrice($data['price'])
-                ->setShortDescription($data['shortDescrition']);
+            $product = $form->getData();
+            $product->setSlug(strtolower($string->slug($product->getName())));
         }
-        dump($data);
+
         $formView = $form->createView();
 
         return $this->render(

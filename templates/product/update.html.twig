@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-  Création d'un produit
+  Edition de {{ product.name }}
 {% endblock %}
 
 {% block body %}
   <h1>
-    Nouveau produit
+    Editer le produit
   </h1>
   {% include 'shared/_productForm.html.twig' with {
-    msgButtonSubmitColor: 'primary',
-    msgButtonSubmitValue: 'Ajouter un produit'
+    msgButtonSubmitColor: 'warning',
+    msgButtonSubmitValue: 'Modifier le produit'
   } %}
 {% endblock %}

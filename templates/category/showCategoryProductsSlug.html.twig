@@ -14,7 +14,7 @@
 
   <div class="row">
     {% for product in category.products %}
-      {% include 'shared/_cardProduct.html.twig' with {
+      {% include 'shared/_productCard.html.twig' with {
         col: 4
       } %}
     {% endfor %}

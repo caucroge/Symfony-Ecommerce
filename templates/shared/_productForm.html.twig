@@ -1,0 +1,20 @@
+{{ form_start(formView) }}
+{{ form_errors(formView) }}
+
+<div class="row">
+  <div class="col">
+    {{ form_row(formView.name) }}
+    {{ form_row(formView.price) }}
+  </div>
+  <div class="col">
+    {{ form_row(formView.mainPicture) }}
+    {{ form_row(formView.shortDescription) }}
+    {{ form_row(formView.category) }}
+  </div>
+</div>
+
+<button type="submit" class="btn btn-{{ msgButtonSubmitColor }}">
+  <i class="fas fa-save"></i>
+  {{ msgButtonSubmitValue }}
+</button>
+{{ form_end(formView) }}

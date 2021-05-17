@@ -2,21 +2,22 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
 use App\Entity\Product;
+use App\Entity\Category;
 use App\Repository\ProductRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProductController extends AbstractController
 {
@@ -44,7 +45,7 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/create', name: "product_create")]
-    public function create(FormFactoryInterface $factory, Request $request, SluggerInterface $string)
+    public function create(FormFactoryInterface $factory, Request $request, SluggerInterface $string, EntityManagerInterface $em)
     {
         $builder = $factory->createBuilder(FormType::class, null, [
             'data_class' => Product::class,
@@ -102,6 +103,8 @@ class ProductController extends AbstractController
         if ($form->isSubmitted()) {
             $product = $form->getData();
             $product->setSlug(strtolower($string->slug($product->getName())));
+            $em->persist($product);
+            $em->flush();
         }
 
         $formView = $form->createView();

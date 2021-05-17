@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Product;
 use App\Repository\ProductRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 class ProductController extends AbstractController
 {
@@ -39,7 +41,7 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/create', name: "product_create")]
-    public function create(FormFactoryInterface $factory)
+    public function create(FormFactoryInterface $factory, Request $request)
     {
         $builder = $factory->createBuilder();
         $builder
@@ -82,6 +84,17 @@ class ProductController extends AbstractController
             );
 
         $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+            $product = new Product;
+            $product
+                ->setName($data['name'])
+                ->setPrice($data['price'])
+                ->setShortDescription($data['shortDescrition']);
+        }
+        dump($data);
         $formView = $form->createView();
 
         return $this->render(

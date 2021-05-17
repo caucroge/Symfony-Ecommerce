@@ -2,14 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,11 +38,9 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/create', name: "product_create")]
-    public function create(FormFactoryInterface $factory, Request $request, SluggerInterface $string, EntityManagerInterface $em)
+    public function create(Request $request, SluggerInterface $string, EntityManagerInterface $em)
     {
-        $builder = $factory->createBuilder(ProductType::class);
-
-        $form = $builder->getForm();
+        $form = $this->createForm(ProductType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {

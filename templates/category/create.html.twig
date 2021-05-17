@@ -8,4 +8,8 @@
   <h1>
     Créer une catégorie
   </h1>
+  {% include 'shared/_categoryForm.html.twig' with {
+    buttonSubmitColor: 'primary',
+    buttonSubmitValue: 'Ajouter une categorie'
+  } %}
 {% endblock %}

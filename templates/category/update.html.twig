@@ -8,4 +8,8 @@
   <h1>
     Modifier la catégorie {{ category.name }}
   </h1>
+  {% include 'shared/_categoryForm.html.twig' with {
+    buttonSubmitColor: 'warning',
+    buttonSubmitValue: 'Modifier une catégorie'
+  } %}
 {% endblock %}

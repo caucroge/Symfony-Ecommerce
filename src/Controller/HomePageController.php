@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomePageController extends AbstractController
 {
-    #[Route("/", name: "homepageIndex")]
+    #[Route("/", name: "index")]
     public function index(ProductRepository $productRepository)
     {
         $products = $productRepository->findBy([], [], 3);

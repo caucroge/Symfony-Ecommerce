@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Product;
 use App\Entity\Category;
 use App\Form\DataTransformer\CentimesTransformer;
+use App\Type\PriceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -38,11 +39,11 @@ class ProductType extends AbstractType
             )
             ->add(
                 'price',
-                MoneyType::class,
+                PriceType::class,
                 [
                     "label" => "Prix du produit",
                     "attr" => ["placeholder" => "Prix du produit"],
-                    "divisor" => 100
+                    "divide" => true
                 ]
             )
             ->add(
@@ -66,8 +67,6 @@ class ProductType extends AbstractType
 
                 ]
             );
-
-        // $builder->get('price')->addModelTransformer(new CentimesTransformer);
     }
 
     public function configureOptions(OptionsResolver $resolver)

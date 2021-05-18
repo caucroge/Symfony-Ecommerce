@@ -28,6 +28,7 @@
     "symfony/stopwatch": "5.2.*",
     "symfony/string": "5.2.*",
     "symfony/twig-bundle": "5.2.*",
+    "symfony/validator": "5.2.*",
     "symfony/var-dumper": "5.2.*",
     "symfony/web-profiler-bundle": "5.2.*",
     "symfony/yaml": "5.2.*",

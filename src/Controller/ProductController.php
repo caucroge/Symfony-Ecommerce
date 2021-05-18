@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProductController extends AbstractController
@@ -74,8 +77,26 @@ class ProductController extends AbstractController
         ProductRepository $productRepository,
         Request $request,
         EntityManagerInterface $em,
-        SluggerInterface $string
+        SluggerInterface $string,
+        ValidatorInterface $validator
     ) {
+        $age = 200;
+        $result = $validator->validate($age, [
+            new LessThanOrEqual([
+                'value' => 120,
+                'message' => "L'age doit être inferieur à {{ compared_value }} mais vous avez donné {{ value }} !"
+            ]),
+            new GreaterThan([
+                'value' => 0,
+                'message' => "L'age doit être superieur à {{ compared_value }} mais vous avez saisie {{ value }} !"
+            ])
+        ]);
+
+        if ($result->count() > 0) {
+            dd("Il y a des erreurs ", $result);
+        }
+        dd("Pas d'erreurs de validation");
+
         $product = $productRepository->find($id);
 
         $form = $this->createForm(ProductType::class, $product);

@@ -39,8 +39,11 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/category/create', name: "category_create")]
-    public function create(SluggerInterface $string, EntityManagerInterface $em, Request $request)
-    {
+    public function create(
+        SluggerInterface $string,
+        EntityManagerInterface $em,
+        Request $request
+    ) {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
@@ -66,8 +69,13 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/category/update/{id}', name: "category_update_id")]
-    public function update($id, CategoryRepository $categoryRepository, Request $request, SluggerInterface $string, EntityManagerInterface $em)
-    {
+    public function update(
+        $id,
+        CategoryRepository $categoryRepository,
+        Request $request,
+        SluggerInterface $string,
+        EntityManagerInterface $em
+    ) {
         $category = $categoryRepository->find($id);
 
         $form = $this->createForm(CategoryType::class, $category);

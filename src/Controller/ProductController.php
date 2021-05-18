@@ -85,40 +85,12 @@ class ProductController extends AbstractController
         SluggerInterface $string,
         ValidatorInterface $validator
     ) {
-        $client = [
-            'nom' => 'Cauchon',
-            'prenom' => 'Roger',
-            'voiture' => [
-                'marque' => "Skoda",
-                'energie' => "Hydrogene",
-                'couleur' => "Bicolore blanche et noire"
-            ]
-        ];
+        $product = new Product();
+        $result = $validator->validate($product);
 
-        $collection = new Collection([
-            'nom' => new NotBlank(['message' => "le nom ne doit pas être vide"]),
-            'prenom' => [
-                new NotBlank(['message' => "le prénom ne doit pas être vide"]),
-                new Length([
-                    'min' => 3,
-                    'minMessage' => "Le prénom ne doit pas faire moins de 3 caractères!",
-                ])
-            ],
-            'voiture' => new Collection([
-                'marque' => new NotBlank(['message' => 'La marque ne peut pas être vide !']),
-                'energie' => new Choice([
-                    'Essence',
-                    'Diesel',
-                    'Electrique',
-                ]),
-                'couleur' => new NotBlank(['message' => 'La couleur ne doit pas être vide !']),
-            ]),
-        ]);
-
-        $result = $validator->validate($client, $collection);
-
-        if ($result->count() > 0) {
-            dd("Il y a des erreurs ", $result);
+        $nbrErr = $result->count();
+        if ($nbrErr > 0) {
+            dd("Il y a $nbrErr erreur(s) de validation !", $result);
         }
         dd("Pas d'erreurs de validation");
 

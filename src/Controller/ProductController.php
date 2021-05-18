@@ -14,6 +14,11 @@ use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class ProductController extends AbstractController
 {
@@ -80,17 +85,37 @@ class ProductController extends AbstractController
         SluggerInterface $string,
         ValidatorInterface $validator
     ) {
-        $age = 200;
-        $result = $validator->validate($age, [
-            new LessThanOrEqual([
-                'value' => 120,
-                'message' => "L'age doit être inferieur à {{ compared_value }} mais vous avez donné {{ value }} !"
+        $client = [
+            'nom' => 'Cauchon',
+            'prenom' => 'Roger',
+            'voiture' => [
+                'marque' => "Skoda",
+                'energie' => "Hydrogene",
+                'couleur' => "Bicolore blanche et noire"
+            ]
+        ];
+
+        $collection = new Collection([
+            'nom' => new NotBlank(['message' => "le nom ne doit pas être vide"]),
+            'prenom' => [
+                new NotBlank(['message' => "le prénom ne doit pas être vide"]),
+                new Length([
+                    'min' => 3,
+                    'minMessage' => "Le prénom ne doit pas faire moins de 3 caractères!",
+                ])
+            ],
+            'voiture' => new Collection([
+                'marque' => new NotBlank(['message' => 'La marque ne peut pas être vide !']),
+                'energie' => new Choice([
+                    'Essence',
+                    'Diesel',
+                    'Electrique',
+                ]),
+                'couleur' => new NotBlank(['message' => 'La couleur ne doit pas être vide !']),
             ]),
-            new GreaterThan([
-                'value' => 0,
-                'message' => "L'age doit être superieur à {{ compared_value }} mais vous avez saisie {{ value }} !"
-            ])
         ]);
+
+        $result = $validator->validate($client, $collection);
 
         if ($result->count() > 0) {
             dd("Il y a des erreurs ", $result);

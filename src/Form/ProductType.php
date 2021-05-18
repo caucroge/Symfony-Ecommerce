@@ -51,32 +51,39 @@ class ProductType extends AbstractType
                     "label" => "Image du produit",
                     "attr" => ["placeholder" => "Url d'une image"]
                 ]
+            )
+            ->add(
+                'category',
+                EntityType::class,
+                [
+                    "label" => "Catégorie",
+                    "placeholder" => "Choisir une catégorie",
+                    "class" => Category::class,
+                    "choice_label" => function (Category $category) {
+                        return strtoupper($category->getName());
+                    }
+
+                ]
             );
+
+        $builder->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $formEvent) {
+                /**@var Product */
+                $product = $formEvent->getData();
+                if ($product->getPrice() !== null) {
+                    $product->setPrice($product->getPrice() * 100);
+                }
+            }
+        );
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $formEvent) {
-
-                $form = $formEvent->getForm();
-
                 /**@var Product */
                 $product = $formEvent->getData();
-
-                if ($product->getId() === null) {
-                    $form
-                        ->add(
-                            'category',
-                            EntityType::class,
-                            [
-                                "label" => "Catégorie",
-                                "placeholder" => "Choisir une catégorie",
-                                "class" => Category::class,
-                                "choice_label" => function (Category $category) {
-                                    return strtoupper($category->getName());
-                                }
-
-                            ]
-                        );
+                if ($product->getPrice() !== null) {
+                    $product->setPrice($product->getPrice() / 100);
                 }
             }
         );

@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ProductController extends AbstractController
 {
@@ -51,8 +50,6 @@ class ProductController extends AbstractController
         if ($form->isSubmitted()) {
 
             $product->setSlug(strtolower($string->slug($product->getName())));
-            $product->setPrice($product->getPrice() * 100);
-
             $em->persist($product);
             $em->flush();
 
@@ -87,8 +84,7 @@ class ProductController extends AbstractController
         if ($form->isSubmitted()) {
 
             $product->setSlug(strtolower($string->slug($product->getName())));
-            $product->setPrice($product->getPrice() * 100);
-
+            dd($product);
             $em->flush();
 
             return $this->redirectToRoute('product_read_slug', [

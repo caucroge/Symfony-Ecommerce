@@ -14,6 +14,22 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CategoryController extends AbstractController
 {
+    protected $categoryRepository;
+
+    public function __construct(CategoryRepository $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+    }
+
+    public function renderMenuList()
+    {
+        $categories = $this->categoryRepository->findAll();
+
+        return $this->render('shared/_categoryMenu.html.twig', [
+            'categories' => $categories
+        ]);
+    }
+
     #[Route('/category/read/{slug}', name: 'category_read_slug')]
     public function readSlug(
         $slug,

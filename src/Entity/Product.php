@@ -32,7 +32,7 @@ class Product
      * @ORM\Column(type="integer")
      */
     #[Assert\NotBlank(
-        message: "Le prix ne doit pas être vide !"
+        message: "Le prix ne doit pas être vide !",
     )]
     private $price;
 
@@ -50,7 +50,8 @@ class Product
      * @ORM\Column(type="string", length=255)
      */
     #[Assert\Url(
-        message: "L'url n'est pas valide"
+        message: "L'url n'est pas valide",
+        groups: ["with-url"]
     )]
     private $mainPicture;
 

@@ -11,15 +11,18 @@ use Bezhanov\Faker\Provider\Commerce;
 use Bluemmb\Faker\PicsumPhotosProvider;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AppFixtures extends Fixture
 {
     protected $slugger;
+    protected $encoder;
 
-    public function __construct(SluggerInterface $slugger)
+    public function __construct(SluggerInterface $slugger, UserPasswordEncoderInterface $encoder)
     {
         $this->slugger = $slugger;
+        $this->encoder = $encoder;
     }
 
     public function load(ObjectManager $manager)
@@ -56,7 +59,7 @@ class AppFixtures extends Fixture
         $admin = new User();
         $admin->setEmail("admin@gmail.com");
         $admin->setFullName($faker->name());
-        $admin->setPassword("admin");
+        $admin->setPassword($this->encoder->encodePassword($admin, "admin"));
         $admin->setRoles(["ROLE_ADMIN"]);
 
         $manager->persist($admin);
@@ -65,7 +68,7 @@ class AppFixtures extends Fixture
             $user = new User();
             $user->setEmail("user$i@gmail.com");
             $user->setFullName($faker->name());
-            $user->setPassword("password");
+            $user->setPassword($this->encoder->encodePassword($user, "password"));
 
             $manager->persist($user);
         }

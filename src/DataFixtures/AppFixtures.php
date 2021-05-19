@@ -6,6 +6,7 @@ use Faker\Factory;
 use App\Entity\Product;
 use Liior\Faker\Prices;
 use App\Entity\Category;
+use App\Entity\User;
 use Bezhanov\Faker\Provider\Commerce;
 use Bluemmb\Faker\PicsumPhotosProvider;
 use Doctrine\Persistence\ObjectManager;
@@ -50,6 +51,23 @@ class AppFixtures extends Fixture
                     ->setMainPicture($faker->imageUrl(400, 400, true));
                 $manager->persist($product);
             }
+        }
+
+        $admin = new User();
+        $admin->setEmail("admin@gmail.com");
+        $admin->setFullName($faker->name());
+        $admin->setPassword("admin");
+        $admin->setRoles(["ROLE_ADMIN"]);
+
+        $manager->persist($admin);
+
+        for ($i = 0; $i < 5; $i++) {
+            $user = new User();
+            $user->setEmail("user$i@gmail.com");
+            $user->setFullName($faker->name());
+            $user->setPassword("password");
+
+            $manager->persist($user);
         }
 
         $manager->flush();

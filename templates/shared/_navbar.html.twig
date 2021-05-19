@@ -13,11 +13,11 @@
 
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
-        {{
-          render(
-            controller('App\\Controller\\CategoryController::renderMenuList')
-          )
-        }}
+        {% for category in categoryRepository.findall() %}
+          <li class="nav-item">
+            <a class="nav-link" href="#">{{ category.name }}</a>
+          </li>
+        {% endfor %}
       </ul>
       <form class="d-flex">
         <input class="form-control me-sm-2" type="text" placeholder="Search" />

@@ -20,14 +20,20 @@ class Product
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message = "Le nom du produit ne doit pas être vide !")
-     * @Assert\Length(min = 3, max = 255, minMessage = "Le nom du produit doit avoir entre 3 et 255 caractères !")
      */
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+        minMessage: "Le nom du produit doit avoir entre 3 et 255 caractères !"
+    )]
     private $name;
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\NotBlank(message = "Le prix ne doit pas être vide !") 
      */
+    #[Assert\NotBlank(
+        message: "Le prix ne doit pas être vide !"
+    )]
     private $price;
 
     /**
@@ -43,6 +49,9 @@ class Product
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Assert\Url(
+        message: "L'url n'est pas valide"
+    )]
     private $mainPicture;
 
     /**

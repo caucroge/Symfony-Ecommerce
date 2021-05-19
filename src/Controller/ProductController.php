@@ -55,7 +55,7 @@ class ProductController extends AbstractController
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $product->setSlug(strtolower($string->slug($product->getName())));
             $em->persist($product);
@@ -82,27 +82,16 @@ class ProductController extends AbstractController
         ProductRepository $productRepository,
         Request $request,
         EntityManagerInterface $em,
-        SluggerInterface $string,
-        ValidatorInterface $validator
+        SluggerInterface $string
     ) {
-        $product = new Product();
-        $result = $validator->validate($product);
-
-        $nbrErr = $result->count();
-        if ($nbrErr > 0) {
-            dd("Il y a $nbrErr erreur(s) de validation !", $result);
-        }
-        dd("Pas d'erreurs de validation");
-
         $product = $productRepository->find($id);
 
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $product->setSlug(strtolower($string->slug($product->getName())));
-            dd($product);
             $em->flush();
 
             return $this->redirectToRoute('product_read_slug', [

@@ -34,7 +34,7 @@ class ProductType extends AbstractType
                 TextareaType::class,
                 [
                     'label' => 'Description courte',
-                    'attr' => ["placeholder" => "Description courte mais parlante pour l'utilisateur"]
+                    'attr' => ["placeholder" => "Description courte mais parlante pour l'utilisateur"],
                 ]
             )
             ->add(
@@ -43,7 +43,7 @@ class ProductType extends AbstractType
                 [
                     "label" => "Prix du produit",
                     "attr" => ["placeholder" => "Prix du produit"],
-                    "divisor" => 100
+                    "divisor" => 100,
                 ]
             )
             ->add(

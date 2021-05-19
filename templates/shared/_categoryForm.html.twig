@@ -1,4 +1,13 @@
-{{ form_start(formView) }}
+{{
+  form_start(
+    formView,
+    {
+      attr: {
+        novalidate: 'novalidate'
+      }
+    }
+  )
+}}
 {{ form_widget(formView) }}
 {{ form_errors(formView) }}
 <button type="submit" class="btn bt-{{ buttonSubmitColor }}">

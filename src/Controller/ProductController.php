@@ -52,12 +52,7 @@ class ProductController extends AbstractController
         EntityManagerInterface $em
     ) {
         $product = new Product;
-        $form = $this->createForm(ProductType::class, $product, [
-            "validation_groups" => [
-                "Default",
-                "with-url"
-            ]
-        ]);
+        $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

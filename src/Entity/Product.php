@@ -50,14 +50,20 @@ class Product
      * @ORM\Column(type="string", length=255)
      */
     #[Assert\Url(
-        message: "L'url n'est pas valide",
-        groups: ["with-url"]
+        message: "L'url n'est pas valide"
     )]
     private $mainPicture;
 
     /**
      * @ORM\Column(type="text")
      */
+    #[Assert\NotBlank(
+        message: "La descrition courte ne doit pas être vide !"
+    )]
+    #[Assert\Length(
+        min: 20,
+        minMessage: "La description courte doit contenir au moins 20 caractères !"
+    )]
     private $shortDescription;
 
     public function getId(): ?int
@@ -70,7 +76,7 @@ class Product
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -82,7 +88,7 @@ class Product
         return $this->price;
     }
 
-    public function setPrice(int $price): self
+    public function setPrice(?int $price): self
     {
         $this->price = $price;
 
@@ -118,7 +124,7 @@ class Product
         return $this->mainPicture;
     }
 
-    public function setMainPicture(string $mainPicture): self
+    public function setMainPicture(?string $mainPicture): self
     {
         $this->mainPicture = $mainPicture;
 
@@ -130,7 +136,7 @@ class Product
         return $this->shortDescription;
     }
 
-    public function setShortDescription(string $shortDescription): self
+    public function setShortDescription(?string $shortDescription): self
     {
         $this->shortDescription = $shortDescription;
 

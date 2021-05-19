@@ -2,7 +2,9 @@
 
 namespace App\Security;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -13,10 +15,12 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 class LoginFormAuthenticator extends AbstractGuardAuthenticator
 {
     protected $encoder;
+    protected $urlGenerator;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordEncoderInterface $encoder, UrlGeneratorInterface $urlGenerator)
     {
         $this->encoder = $encoder;
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function supports(Request $request)
@@ -42,12 +46,12 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        dd("Utilisateur invalide");
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
     {
-        dd("Utilisateur valide");
+        $url = $this->urlGenerator->generate('index');
+        return new RedirectResponse($url);
     }
 
     public function start(Request $request, AuthenticationException $authException = null)

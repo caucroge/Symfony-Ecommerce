@@ -2,26 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  */
 class Product
 {
-    public static function loadValidatorMetadata(ClassMetadata $metadata)
-    {
-        $metadata->addPropertyConstraints('name', [
-            new NotBlank(['message' => "Le nom du produit ne doit pas être vide !"]),
-            new Length(['min' => 3, 'max' => 255, 'minMessage' => "Le nom doit comprendre entre 3 et 255 caractères !"])
-        ]);
-        $metadata->addPropertyConstraint('price', new NotBlank(['message' => "Le prix ne doit pas être vide !"]));
-    }
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -31,11 +19,14 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message = "Le nom du produit ne doit pas être vide !")
+     * @Assert\Length(min = 3, max = 255, minMessage = "Le nom du produit doit avoir entre 3 et 255 caractères !")
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message = "Le prix ne doit pas être vide !") 
      */
     private $price;
 

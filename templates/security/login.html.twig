@@ -8,6 +8,11 @@
   <h1>
     Connexion
   </h1>
+  {% if error %}
+    <div class="alert alert-danger">
+      {{ error.message }}
+    </div>
+  {% endif %}
   {{ form_start(formView) }}
   {{ form_widget(formView) }}
   {{ form_errors(formView) }}

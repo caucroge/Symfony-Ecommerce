@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
@@ -46,12 +47,14 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
+        echo "Failure";
+        $request->attributes->set(Security::AUTHENTICATION_ERROR, $exception);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
     {
-        $url = $this->urlGenerator->generate('index');
-        return new RedirectResponse($url);
+        echo "Success";
+        return new RedirectResponse($this->urlGenerator->generate('index'));
     }
 
     public function start(Request $request, AuthenticationException $authException = null)

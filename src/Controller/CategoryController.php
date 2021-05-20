@@ -6,13 +6,14 @@ use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class CategoryController extends AbstractController
 {
@@ -86,6 +87,9 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/category/update/{id}', name: "category_update_id")]
+    /**
+     * @IsGranted("ROLE_ADMIN", message="Vous n'avez pas le droit à cette ressources")
+     */
     public function update(
         $id,
         CategoryRepository $categoryRepository,
@@ -93,8 +97,6 @@ class CategoryController extends AbstractController
         SluggerInterface $string,
         EntityManagerInterface $em,
     ) {
-        $this->denyAccessUnlessGranted("ROLE_ADMIN", null, "Vous n'avez pas le droit à cette ressource !");
-
         $category = $categoryRepository->find($id);
 
         $form = $this->createForm(CategoryType::class, $category);

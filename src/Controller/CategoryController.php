@@ -7,7 +7,6 @@ use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -88,6 +87,9 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/category/update/{id}', name: "category_update_id")]
+    /**
+     * @isGranted("CAN_EDIT", subject="id", message="Vous n'avez pas les autorisations pour accéder à cette catégorie !")
+     */
     public function update(
         $id,
         CategoryRepository $categoryRepository,
@@ -98,16 +100,6 @@ class CategoryController extends AbstractController
         $category = $categoryRepository->find($id);
         if (!$category) {
             throw new NotFoundHttpException("Cette catégorie n'existe pas !");
-        }
-
-        $user = $this->getUser();
-
-        if ($user === null) {
-            $this->redirectToRoute('login');
-        }
-
-        if ($user !== $category->getOwner()) {
-            throw new AccessDeniedHttpException("Vous n'êtes pas le propriétaire de cette catégorie");
         }
 
         $form = $this->createForm(CategoryType::class, $category);

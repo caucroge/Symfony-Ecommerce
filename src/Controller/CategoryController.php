@@ -92,17 +92,8 @@ class CategoryController extends AbstractController
         Request $request,
         SluggerInterface $string,
         EntityManagerInterface $em,
-        Security $security
     ) {
-        $user = $security->getUser();
-
-        if ($user === null) {
-            return $this->redirectToRoute('login');
-        }
-
-        if (!in_array("ROLE_ADMIN", $user->getRoles())) {
-            throw new AccessDeniedHttpException("Vous n'avez pas le droit d'accéder à cette ressource !");
-        }
+        $this->denyAccessUnlessGranted("ROLE_ADMIN", null, "Vous n'avez pas le droit à cette ressource !");
 
         $category = $categoryRepository->find($id);
 

@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CategoryController extends AbstractController
@@ -89,8 +91,19 @@ class CategoryController extends AbstractController
         CategoryRepository $categoryRepository,
         Request $request,
         SluggerInterface $string,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        Security $security
     ) {
+        $user = $security->getUser();
+
+        if ($user === null) {
+            return $this->redirectToRoute('login');
+        }
+
+        if (!in_array("ROLE_ADMIN", $user->getRoles())) {
+            throw new AccessDeniedHttpException("Vous n'avez pas le droit d'accéder à cette ressource !");
+        }
+
         $category = $categoryRepository->find($id);
 
         $form = $this->createForm(CategoryType::class, $category);

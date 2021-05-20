@@ -10,7 +10,11 @@
   </h1>
   {% if error %}
     <div class="alert alert-danger">
-      {{ error.message }}
+      {{
+        error.message|replace({
+          'Bad credentials.': 'Email ou mot de passe invalide !'
+        })
+      }}
     </div>
   {% endif %}
   {{ form_start(formView) }}

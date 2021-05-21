@@ -30,6 +30,11 @@
         {% endfor %}
       </ul>
       <ul class="navbar">
+        <li class="nav-item">
+          <a href="{{ path('panier_read') }}" class="nav-link">
+            <span><i class="fas fa-shopping-basket fa-2x"></i>Panier</span>
+          </a>
+        </li>
         {% if app.user %}
           <li class="nav-item">
             <a href="{{ path('logout') }}" class="btn btn-danger">Logout</a>

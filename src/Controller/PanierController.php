@@ -37,4 +37,28 @@ class PanierController extends AbstractController
             'slug' => $product->getSlug(),
         ]);
     }
+
+    #[Route('/panier/read', name: 'panier_read')]
+    public function read(SessionInterface $session, ProductRepository $productRepository)
+    {
+        $items = [];
+        $allSum = 0;
+
+        foreach ($session->get('panier', []) as $id => $quantity) {
+
+            $product = $productRepository->find($id);
+            $sum = $product->getPrice() * $quantity;
+            $items[] = [
+                'product' => $product,
+                'quantity' => $quantity,
+                'sum' => $sum,
+            ];
+            $allSum += $sum;
+        }
+
+        return $this->render('panier/read.html.twig', [
+            'items' => $items,
+            'allSum' => $allSum,
+        ]);
+    }
 }

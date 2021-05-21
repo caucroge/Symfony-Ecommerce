@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Votre panier
+{% endblock %}
+
+{% block body %}
+  <h1>
+    Votre Panier
+  </h1>
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Produit
+        </th>
+        <th>
+          Prix
+        </th>
+        <th>
+          Quantité
+        </th>
+        <th>
+          Total
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+        <tr>
+          <td>
+            {{ item.product.name }}
+          </td>
+          <td>
+            {{ item.product.price }}
+          </td>
+          <td>
+            {{ item.quantity }}
+          </td>
+          <td>
+            {{ item.sum }}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3">
+          Total :
+        </td>
+        <td>
+          {{ allSum }}
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+{% endblock %}

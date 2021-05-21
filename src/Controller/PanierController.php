@@ -3,22 +3,25 @@
 namespace App\Controller;
 
 use App\Repository\ProductRepository;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class PanierController extends AbstractController
 {
     #[Route('/panier/add/{id}', name: 'panier_add', requirements: ['id' => "\d+"])]
-    public function add($id, Request $request, ProductRepository $productRepository): Response
-    {
+    public function add(
+        $id,
+        ProductRepository $productRepository,
+        SessionInterface $session
+    ): Response {
         $product = $productRepository->find($id);
         if (!$product) {
             throw $this->createNotFoundException("Le produit '$id' n'existe pas ");
         }
 
-        $panier = $request->getSession()->get('panier', []);
+        $panier = $session->get('panier', []);
 
         if (array_key_exists($id, $panier)) {
             $panier[$id]++;
@@ -26,7 +29,8 @@ class PanierController extends AbstractController
             $panier[$id] = 1;
         }
 
-        $request->getSession()->set('panier', $panier);
+        $session->set('panier', $panier);
+
 
         return $this->redirectToRoute('product_read_slug', [
             'slug' => $product->getSlug(),

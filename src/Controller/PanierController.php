@@ -34,8 +34,7 @@ class PanierController extends AbstractController
 
         /**@var FlashBag */
         $flashBag = $session->getBag('flashes');
-        $flashBag->add('success', "Tout s'est bien passé.");
-        $flashBag->add('warning', "Attention !");
+        $flashBag->add('success', "Le produit : {$product->getName()} à été ajouter dans votre panier.");
 
         return $this->redirectToRoute('product_read_slug', [
             'slug' => $product->getSlug(),

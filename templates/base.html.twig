@@ -18,12 +18,23 @@
     {% endblock %}
 
     {% block javascripts %}
+
     {% endblock %}
   </head>
   <body>
     {% include 'shared/_navbar.html.twig' %}
     <div class="container pt-5">
+      {% for infoLevel, messages in app.flashes %}
+        <div class="alert alert-{{ infoLevel }}">
+          {% for message in messages %}
+            <p>
+              {{ message }}
+            </p>
+          {% endfor %}
+        </div>
+      {% endfor %}
       {% block body %}
+
       {% endblock %}
     </div>
   </body>

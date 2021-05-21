@@ -5,8 +5,9 @@ namespace App\Controller;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PanierController extends AbstractController
 {
@@ -31,6 +32,10 @@ class PanierController extends AbstractController
 
         $session->set('panier', $panier);
 
+        /**@var FlashBag */
+        $flashBag = $session->getBag('flashes');
+        $flashBag->add('success', "Tout s'est bien passé.");
+        $flashBag->add('warning', "Attention !");
 
         return $this->redirectToRoute('product_read_slug', [
             'slug' => $product->getSlug(),

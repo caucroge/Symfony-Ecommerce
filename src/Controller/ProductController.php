@@ -38,7 +38,7 @@ class ProductController extends AbstractController
         }
 
         return $this->render(
-            'product/showProductSlug.html.twig',
+            'product/readProductSlug.html.twig',
             [
                 'product' => $product
             ]

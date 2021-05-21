@@ -10,9 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CategoryController extends AbstractController
@@ -49,7 +47,7 @@ class CategoryController extends AbstractController
         }
 
         return $this->render(
-            'category/showCategoryProductsSlug.html.twig',
+            'category/readCategoryProductsSlug.html.twig',
             [
                 'category' => $category
             ]
@@ -87,9 +85,6 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/category/update/{id}', name: "category_update_id")]
-    /**
-     * @isGranted("CAN_EDIT", subject="id", message="Vous n'avez pas les autorisations pour accéder à cette catégorie !")
-     */
     public function update(
         $id,
         CategoryRepository $categoryRepository,

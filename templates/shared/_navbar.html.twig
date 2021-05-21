@@ -15,7 +15,17 @@
       <ul class="navbar-nav me-auto">
         {% for category in categoryRepository.findall() %}
           <li class="nav-item">
-            <a class="nav-link" href="#">{{ category.name }}</a>
+            <a class="nav-link"
+              href="{{
+              path(
+                'category_read_slug',
+                {
+                  slug: category.slug
+                }
+              )
+              }}">
+              {{ category.name }}
+            </a>
           </li>
         {% endfor %}
       </ul>

@@ -26,19 +26,19 @@
       </tr>
     </thead>
     <tbody>
-      {% for panierItem in panierItems %}
+      {% for item in items %}
         <tr>
           <td>
-            {{ panierItem.product.name }}
+            {{ item.product.name }}
           </td>
           <td>
-            {{ panierItem.product.price }}
+            {{ item.product.price }}
           </td>
           <td>
-            {{ panierItem.quantity }}
+            {{ item.quantity }}
           </td>
           <td>
-            {{ panierItem.sum }}
+            {{ item.sum }}
           </td>
         </tr>
       {% endfor %}
@@ -49,7 +49,7 @@
           Total :
         </td>
         <td>
-          {{ panierAllSum }}
+          {{ allSum }}
         </td>
       </tr>
     </tfoot>

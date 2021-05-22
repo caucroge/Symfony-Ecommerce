@@ -47,7 +47,7 @@ class PanierHandler
         return $allSum;
     }
 
-    public function getPanierItems(): array
+    public function getItems(): array
     {
         $panierItems = [];
 
@@ -62,5 +62,10 @@ class PanierHandler
         }
 
         return $panierItems;
+    }
+
+    public function getCountItems(): int
+    {
+        return count($this->session->get('panier', 0));
     }
 }

@@ -33,8 +33,8 @@ class PanierController extends AbstractController
     public function read(PanierHandler $panierHandler)
     {
         return $this->render('panier/read.html.twig', [
-            'panierItems' => $panierHandler->getPanierItems(),
-            'panierAllSum' => $panierHandler->getAllSum()
+            'items' => $panierHandler->getItems(),
+            'allSum' => $panierHandler->getAllSum()
         ]);
     }
 }

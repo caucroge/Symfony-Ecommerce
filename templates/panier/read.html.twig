@@ -7,6 +7,7 @@
 {% block body %}
   <h1>
     Votre Panier
+    {% if items | length == 0  %} est vide !{% endif %}
   </h1>
   <table class="table">
     <thead>
@@ -23,6 +24,7 @@
         <th>
           Total
         </th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -35,10 +37,45 @@
             {{ item.product.price }}
           </td>
           <td>
+            <a href="{{
+              path(
+                'panier_add_id',
+                {
+                  id: item.product.id
+                }
+              )
+              }}?returnToPanier=true"
+              class="btn btn-sm btn-primay">
+              <span class="fas fa-plus-square"></span>
+            </a>
             {{ item.quantity }}
+            <a href="{{
+              path(
+                'panier_decrement_id',
+                {
+                  id: item.product.id
+                }
+              )
+              }}"
+              class="btn btn-sm btn-primay">
+              <span class="fas fa-minus-square"></i></span>
+            </a>
           </td>
           <td>
             {{ item.sum }}
+          </td>
+          <td>
+            <a href="{{
+              path(
+                'panier_delete_id',
+                {
+                  id: item.product.id
+                }
+              )
+              }}"
+              class="btn btn-sm btn-danger">
+              <span class="fas fa-trash-alt"></span>
+            </a>
           </td>
         </tr>
       {% endfor %}

@@ -30,6 +30,31 @@ class PanierHandler
         $this->session->set('panier', $panier);
     }
 
+    public function remove($id): void
+    {
+        $panier = $this->session->get('panier', []);
+        unset($panier[$id]);
+
+        $this->session->set('panier', $panier);
+    }
+
+    public function decrement($id): void
+    {
+        $panier = $this->session->get('panier', []);
+        if (!array_key_exists($id, $panier)) {
+            return;
+        }
+
+        if ($panier[$id] === 1) {
+            $this->remove($id);
+        } else {
+            $panier[$id]--;
+            $this->session->set('panier', $panier);
+        }
+
+        return;
+    }
+
     public function getAllSum(): int
     {
         $allSum = 0;
@@ -66,6 +91,13 @@ class PanierHandler
 
     public function getCountItems(): int
     {
-        return count($this->session->get('panier', 0));
+        $sumQuantity = 0;
+
+        foreach ($this->session->get('panier', []) as $id => $quantity) {
+
+            $sumQuantity += $quantity;
+        }
+
+        return $sumQuantity;
     }
 }

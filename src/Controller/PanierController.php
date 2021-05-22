@@ -2,13 +2,11 @@
 
 namespace App\Controller;
 
-use App\Service\PanierService;
+use App\Handler\PanierHandler;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PanierController extends AbstractController
 {
@@ -16,14 +14,14 @@ class PanierController extends AbstractController
     public function add(
         $id,
         ProductRepository $productRepository,
-        PanierService $panierService,
+        PanierHandler $panierHandler,
     ): Response {
         $product = $productRepository->find($id);
         if (!$product) {
             throw $this->createNotFoundException("Le produit '$id' n'existe pas ");
         }
 
-        $panierService->add($id);
+        $panierHandler->add($id);
         $this->addFlash('success', "Le produit : {$product->getName()} à été ajouter dans votre panier.");
 
         return $this->redirectToRoute('product_read_slug', [
@@ -32,14 +30,11 @@ class PanierController extends AbstractController
     }
 
     #[Route('/panier/read', name: 'panier_read')]
-    public function read(PanierService $panierService)
+    public function read(PanierHandler $panierHandler)
     {
-        $items = $panierService->getItems();
-        $allSum = $panierService->getAllSum();
-
         return $this->render('panier/read.html.twig', [
-            'items' => $items,
-            'allSum' => $allSum,
+            'panierItems' => $panierHandler->getPanierItems(),
+            'panierAllSum' => $panierHandler->getAllSum()
         ]);
     }
 }

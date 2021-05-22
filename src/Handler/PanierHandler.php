@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Service;
+namespace App\Handler;
 
+use App\Entity\PanierItem;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class PanierService
+class PanierHandler
 {
     protected $session;
     protected $productRepository;
@@ -36,27 +37,30 @@ class PanierService
         foreach ($this->session->get('panier', []) as $id => $quantity) {
 
             $product = $this->productRepository->find($id);
+            if (!$product) {
+                continue;
+            }
+
             $allSum += $product->getPrice() * $quantity;
         }
 
         return $allSum;
     }
 
-    public function getItems(): array
+    public function getPanierItems(): array
     {
-        $items = [];
+        $panierItems = [];
 
         foreach ($this->session->get('panier', []) as $id => $quantity) {
 
             $product = $this->productRepository->find($id);
-            $sum = $product->getPrice() * $quantity;
-            $items[] = [
-                'product' => $product,
-                'quantity' => $quantity,
-                'sum' => $sum,
-            ];
+            if (!$product) {
+                continue;
+            }
+
+            $panierItems[] = new PanierItem($product, $quantity);
         }
 
-        return $items;
+        return $panierItems;
     }
 }

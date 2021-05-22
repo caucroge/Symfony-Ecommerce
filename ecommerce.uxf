@@ -3,4 +3,7 @@ m1=0..n
 m2=1..1</panel_attributes><additional_attributes>10;10;120;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>330</y><w>100</w><h>30</h></coordinates><panel_attributes>User</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>240</y><w>50</w><h>110</h></coordinates><panel_attributes>lt=-
 m1=0..n
 m2=0..1
-</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>450</y><w>100</w><h>30</h></coordinates><panel_attributes>Commande
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>350</y><w>50</w><h>120</h></coordinates><panel_attributes>lt=-
+m1=0..n
+m2=0..1</panel_attributes><additional_attributes>10;100;10;10</additional_attributes></element></diagram>

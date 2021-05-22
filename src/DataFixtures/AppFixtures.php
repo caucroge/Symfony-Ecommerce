@@ -6,6 +6,7 @@ use Faker\Factory;
 use App\Entity\Product;
 use Liior\Faker\Prices;
 use App\Entity\Category;
+use App\Entity\Commande;
 use App\Entity\User;
 use Bezhanov\Faker\Provider\Commerce;
 use Bluemmb\Faker\PicsumPhotosProvider;
@@ -64,13 +65,32 @@ class AppFixtures extends Fixture
 
         $manager->persist($admin);
 
+        $users = [];
         for ($i = 0; $i < 5; $i++) {
+
             $user = new User();
             $user->setEmail("user$i@gmail.com");
             $user->setFullName($faker->name());
             $user->setPassword($this->encoder->encodePassword($user, "password"));
+            $users[] = $user;
 
             $manager->persist($user);
+        }
+
+        for ($i = 0; $i < mt_rand(20, 40); $i++) {
+            $commande = new Commande();
+            $commande
+                ->setFullName($faker->name())
+                ->setAddress($faker->streetAddress())
+                ->setPostalCode($faker->postcode())
+                ->setCity($faker->city());
+            if ($faker->boolean(90)) {
+                $commande->setStatus(Commande::STATUS_PAID);
+            }
+            $commande->setCustomer($faker->randomElement($users));
+            $commande->setTotal(mt_rand(2000, 30000));
+
+            $manager->persist($commande);
         }
 
         $manager->flush();

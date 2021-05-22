@@ -17,30 +17,40 @@ class PanierHandler
         $this->productRepository = $productRepository;
     }
 
+    protected function getPanier(): array
+    {
+        return $this->session->get('panier', []);
+    }
+
+    protected function savePanier(array $panier): void
+    {
+        $this->session->set('panier', $panier);
+    }
+
     public function add(int $id,)
     {
-        $panier = $this->session->get('panier', []);
+        $panier = $this->getPanier();
 
-        if (array_key_exists($id, $panier)) {
-            $panier[$id]++;
-        } else {
-            $panier[$id] = 1;
+        if (!array_key_exists($id, $panier)) {
+            $panier[$id] = 0;
         }
 
-        $this->session->set('panier', $panier);
+        $panier[$id]++;
+
+        $this->savePanier($panier);
     }
 
     public function remove($id): void
     {
-        $panier = $this->session->get('panier', []);
+        $panier = $this->getPanier();
         unset($panier[$id]);
 
-        $this->session->set('panier', $panier);
+        $this->savePanier($panier);
     }
 
     public function decrement($id): void
     {
-        $panier = $this->session->get('panier', []);
+        $panier = $this->getPanier();
         if (!array_key_exists($id, $panier)) {
             return;
         }
@@ -49,7 +59,7 @@ class PanierHandler
             $this->remove($id);
         } else {
             $panier[$id]--;
-            $this->session->set('panier', $panier);
+            $this->savePanier($panier);
         }
 
         return;
@@ -59,7 +69,7 @@ class PanierHandler
     {
         $allSum = 0;
 
-        foreach ($this->session->get('panier', []) as $id => $quantity) {
+        foreach ($this->getPanier() as $id => $quantity) {
 
             $product = $this->productRepository->find($id);
             if (!$product) {
@@ -76,7 +86,7 @@ class PanierHandler
     {
         $panierItems = [];
 
-        foreach ($this->session->get('panier', []) as $id => $quantity) {
+        foreach ($this->getPanier()  as $id => $quantity) {
 
             $product = $this->productRepository->find($id);
             if (!$product) {
@@ -93,7 +103,7 @@ class PanierHandler
     {
         $sumQuantity = 0;
 
-        foreach ($this->session->get('panier', []) as $id => $quantity) {
+        foreach ($this->getPanier()  as $id => $quantity) {
 
             $sumQuantity += $quantity;
         }

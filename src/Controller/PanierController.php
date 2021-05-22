@@ -11,28 +11,35 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PanierController extends AbstractController
 {
+    protected $productRepository;
+    protected $panierHandler;
+
+    public function __construct(ProductRepository $productRepository, PanierHandler $panierHandler)
+    {
+        $this->productRepository = $productRepository;
+        $this->panierHandler = $panierHandler;
+    }
+
     #[Route('/panier/read', name: 'panier_read')]
-    public function read(PanierHandler $panierHandler)
+    public function read()
     {
         return $this->render('panier/read.html.twig', [
-            'items' => $panierHandler->getItems(),
-            'allSum' => $panierHandler->getAllSum()
+            'items' => $this->panierHandler->getItems(),
+            'allSum' => $this->panierHandler->getAllSum()
         ]);
     }
 
     #[Route('/panier/add/{id}', name: 'panier_add_id', requirements: ['id' => "\d+"])]
     public function add(
         $id,
-        ProductRepository $productRepository,
-        PanierHandler $panierHandler,
         Request $request,
     ): Response {
-        $product = $productRepository->find($id);
+        $product = $this->productRepository->find($id);
         if (!$product) {
             throw $this->createNotFoundException("Le produit '$id' n'existe pas ");
         }
 
-        $panierHandler->add($id);
+        $this->panierHandler->add($id);
         $this->addFlash('success', "Le produit : {$product->getName()} à été ajouter dans votre panier.");
 
         if ($request->query->get('returnToPanier')) {
@@ -47,28 +54,28 @@ class PanierController extends AbstractController
     }
 
     #[Route('/panier/delete/{id}', name: 'panier_delete_id', requirements: ["id" => "\d+"])]
-    public function delete($id, ProductRepository $productRepository, PanierHandler $panierHandler)
+    public function delete($id)
     {
-        $product = $productRepository->find($id);
+        $product = $this->productRepository->find($id);
         if (!$product) {
             throw $this->createNotFoundException("Le produit '$id' n'existe pas ");
         }
 
-        $panierHandler->remove($id);
+        $this->panierHandler->remove($id);
         $this->addFlash("success", "Le produit {$product->getName()} à bien été retiré du panier");
 
         return $this->redirectToRoute("panier_read");
     }
 
     #[Route('/panier/decrement/{id}', name: 'panier_decrement_id', requirements: ["id" => "\d+"])]
-    public function decrement($id, ProductRepository $productRepository, PanierHandler $panierHandler)
+    public function decrement($id)
     {
-        $product = $productRepository->find($id);
+        $product = $this->productRepository->find($id);
         if (!$product) {
             throw $this->createNotFoundException("Le produit '$id' n'existe pas ");
         }
 
-        $panierHandler->decrement($id);
+        $this->panierHandler->decrement($id);
         $this->addFlash('warning', "Un produit : {$product->getName()} à été enlevé du panier !");
 
         return $this->redirectToRoute("panier_read");

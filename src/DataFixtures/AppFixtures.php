@@ -80,6 +80,7 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < mt_rand(20, 40); $i++) {
             $commande = new Commande();
             $commande
+                ->setCreateAt($faker->dateTime())
                 ->setFullName($faker->name())
                 ->setAddress($faker->streetAddress())
                 ->setPostalCode($faker->postcode())

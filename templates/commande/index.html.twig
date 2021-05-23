@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Liste des commandes
+{% endblock %}
+
+{% block body %}
+  <h1>
+    Mes commandes
+  </h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>
+          Numéro
+        </th>
+        <th>
+          Adresse
+        </th>
+        <th>
+          Date de commande
+        </th>
+        <th>
+          Total
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for commande in commandes %}
+        <tr>
+          <td>
+            {{ commande.id }}
+          </td>
+          <td>
+            {{ commande.address }}
+          </td>
+          <td>
+            {{ commande.createAt|date('d/m/Y H:i') }}
+          </td>
+          <td>
+            {{ commande.total / 100 }} &euro;
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

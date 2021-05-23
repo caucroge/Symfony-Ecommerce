@@ -55,6 +55,11 @@ class Commande
      */
     private $customer;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    private $createAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -140,6 +145,18 @@ class Commande
     public function setCustomer(?User $customer): self
     {
         $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getCreateAt(): ?\DateTimeInterface
+    {
+        return $this->createAt;
+    }
+
+    public function setCreateAt(?\DateTimeInterface $createAt): self
+    {
+        $this->createAt = $createAt;
 
         return $this;
     }

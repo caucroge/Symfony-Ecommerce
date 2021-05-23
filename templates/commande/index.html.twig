@@ -41,8 +41,10 @@
             {{ commande.createAt|date('d/m/Y H:i') }}
           </td>
           <td>
-            {% for product in commande.products %}
-              <li>{{ product.name }} ({{ product.price / 100 }} &euro;)</li>
+            {% for ligneCommande in commande.ligneCommandes %}
+              <li>
+                {{ ligneCommande.name }} ({{ ligneCommande.total / 100 }} &euro;)
+              </li>
             {% endfor %}
           </td>
           <td>

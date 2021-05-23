@@ -15,11 +15,6 @@ class Commande
     public const STATUS_PENDING = "PENDING";
     public const STATUS_PAID = 'PAID';
 
-    public function __construct()
-    {
-        $this->products = new ArrayCollection();
-    }
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -68,9 +63,14 @@ class Commande
     private $createAt;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Product::class, inversedBy="commandes")
+     * @ORM\OneToMany(targetEntity=LigneCommande::class, mappedBy="commande", orphanRemoval=true)
      */
-    private $products;
+    private $ligneCommandes;
+
+    public function __construct()
+    {
+        $this->ligneCommandes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -174,25 +174,31 @@ class Commande
     }
 
     /**
-     * @return Collection|Product[]
+     * @return Collection|LigneCommande[]
      */
-    public function getProducts(): Collection
+    public function getLigneCommandes(): Collection
     {
-        return $this->products;
+        return $this->ligneCommandes;
     }
 
-    public function addProduct(Product $product): self
+    public function addLigneCommande(LigneCommande $ligneCommande): self
     {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
+        if (!$this->ligneCommandes->contains($ligneCommande)) {
+            $this->ligneCommandes[] = $ligneCommande;
+            $ligneCommande->setCommande($this);
         }
 
         return $this;
     }
 
-    public function removeProduct(Product $product): self
+    public function removeLigneCommande(LigneCommande $ligneCommande): self
     {
-        $this->products->removeElement($product);
+        if ($this->ligneCommandes->removeElement($ligneCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneCommande->getCommande() === $this) {
+                $ligneCommande->setCommande(null);
+            }
+        }
 
         return $this;
     }

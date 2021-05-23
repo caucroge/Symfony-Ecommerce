@@ -13,11 +13,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Product
 {
-    public function __construct()
-    {
-        $this->commandes = new ArrayCollection();
-    }
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -75,9 +70,15 @@ class Product
     private $shortDescription;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Commande::class, mappedBy="products")
+     * @ORM\OneToMany(targetEntity=LigneCommande::class, mappedBy="product")
      */
-    private $commandes;
+    private $ligneCommandes;
+
+    public function __construct()
+    {
+        $this->commande = new ArrayCollection();
+        $this->ligneCommandes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -157,27 +158,30 @@ class Product
     }
 
     /**
-     * @return Collection|Commande[]
+     * @return Collection|LigneCommande[]
      */
-    public function getCommandes(): Collection
+    public function getLigneCommandes(): Collection
     {
-        return $this->commandes;
+        return $this->ligneCommandes;
     }
 
-    public function addCommande(Commande $commande): self
+    public function addLigneCommande(LigneCommande $ligneCommande): self
     {
-        if (!$this->commandes->contains($commande)) {
-            $this->commandes[] = $commande;
-            $commande->addProduct($this);
+        if (!$this->ligneCommandes->contains($ligneCommande)) {
+            $this->ligneCommandes[] = $ligneCommande;
+            $ligneCommande->setProduct($this);
         }
 
         return $this;
     }
 
-    public function removeCommande(Commande $commande): self
+    public function removeLigneCommande(LigneCommande $ligneCommande): self
     {
-        if ($this->commandes->removeElement($commande)) {
-            $commande->removeProduct($this);
+        if ($this->ligneCommandes->removeElement($ligneCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneCommande->getProduct() === $this) {
+                $ligneCommande->setProduct(null);
+            }
         }
 
         return $this;

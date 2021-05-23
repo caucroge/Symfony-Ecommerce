@@ -3,18 +3,19 @@
 namespace App\DataFixtures;
 
 use Faker\Factory;
+use App\Entity\User;
 use App\Entity\Product;
 use Liior\Faker\Prices;
 use App\Entity\Category;
 use App\Entity\Commande;
-use App\Entity\User;
+use App\Entity\LigneCommande;
 use Bezhanov\Faker\Provider\Commerce;
 use Bluemmb\Faker\PicsumPhotosProvider;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bridge\Monolog\Processor\ConsoleCommandProcessor;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AppFixtures extends Fixture
 {
@@ -96,12 +97,26 @@ class AppFixtures extends Fixture
             }
 
             $commande->setCustomer($faker->randomElement($users));
-            $commande->setTotal(mt_rand(2000, 30000));
 
             $commandeProducts = $faker->randomElements($products, mt_rand(3, 5));
-            foreach ($commandeProducts as $commandeProduct) {
-                $commande->addProduct($commandeProduct);
+            $totalCommande = 0;
+            foreach ($commandeProducts as $product) {
+
+                $ligneCommande = new LigneCommande();
+                $ligneCommande
+                    ->setProduct($product)
+                    ->setQuantity(mt_rand(1, 3))
+                    ->setName($product->getName())
+                    ->setPrice($product->getPrice())
+                    ->setTotal($ligneCommande->getPrice() * $ligneCommande->getQuantity())
+                    ->setCommande($commande);
+
+                $totalCommande += $ligneCommande->getTotal();
+
+                $manager->persist($ligneCommande);
             }
+
+            $commande->setTotal($totalCommande);
 
             $manager->persist($commande);
         }

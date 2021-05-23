@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\PanierConfirmationType;
 use App\Handler\PanierHandler;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,9 +24,12 @@ class PanierController extends AbstractController
     #[Route('/panier/read', name: 'panier_read')]
     public function read()
     {
+        $form = $this->createForm(PanierConfirmationType::class);
+
         return $this->render('panier/read.html.twig', [
             'items' => $this->panierHandler->getItems(),
-            'allSum' => $this->panierHandler->getAllSum()
+            'allSum' => $this->panierHandler->getAllSum(),
+            'formView' => $form->createView()
         ]);
     }
 

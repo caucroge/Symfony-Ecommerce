@@ -12,6 +12,7 @@ use Bezhanov\Faker\Provider\Commerce;
 use Bluemmb\Faker\PicsumPhotosProvider;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Bridge\Monolog\Processor\ConsoleCommandProcessor;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -33,6 +34,7 @@ class AppFixtures extends Fixture
         $faker->addProvider(new Commerce($faker));
         $faker->addProvider(new PicsumPhotosProvider($faker));
 
+        $products = [];
         for ($i = 0; $i < 3; $i++) {
             $category = new Category();
             $category
@@ -53,6 +55,8 @@ class AppFixtures extends Fixture
                     ->setCategory($category)
                     ->setShortDescription($faker->paragraph())
                     ->setMainPicture($faker->imageUrl(400, 400, true));
+
+                $products[] = $product;
                 $manager->persist($product);
             }
         }
@@ -78,6 +82,7 @@ class AppFixtures extends Fixture
         }
 
         for ($i = 0; $i < mt_rand(20, 40); $i++) {
+
             $commande = new Commande();
             $commande
                 ->setCreateAt($faker->dateTime())
@@ -85,11 +90,18 @@ class AppFixtures extends Fixture
                 ->setAddress($faker->streetAddress())
                 ->setPostalCode($faker->postcode())
                 ->setCity($faker->city());
+
             if ($faker->boolean(90)) {
                 $commande->setStatus(Commande::STATUS_PAID);
             }
+
             $commande->setCustomer($faker->randomElement($users));
             $commande->setTotal(mt_rand(2000, 30000));
+
+            $commandeProducts = $faker->randomElements($products, mt_rand(3, 5));
+            foreach ($commandeProducts as $commandeProduct) {
+                $commande->addProduct($commandeProduct);
+            }
 
             $manager->persist($commande);
         }

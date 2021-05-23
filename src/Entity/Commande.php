@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CommandeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,6 +14,11 @@ class Commande
 {
     public const STATUS_PENDING = "PENDING";
     public const STATUS_PAID = 'PAID';
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
 
     /**
      * @ORM\Id
@@ -59,6 +66,11 @@ class Commande
      * @ORM\Column(type="datetime", nullable=false)
      */
     private $createAt;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Product::class, inversedBy="commandes")
+     */
+    private $products;
 
     public function getId(): ?int
     {
@@ -157,6 +169,30 @@ class Commande
     public function setCreateAt(?\DateTimeInterface $createAt): self
     {
         $this->createAt = $createAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        $this->products->removeElement($product);
 
         return $this;
     }

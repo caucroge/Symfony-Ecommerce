@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,6 +13,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Product
 {
+    public function __construct()
+    {
+        $this->commandes = new ArrayCollection();
+    }
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -66,6 +73,11 @@ class Product
         minMessage: "La description courte doit contenir au moins 20 caractères !"
     )]
     private $shortDescription;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Commande::class, mappedBy="products")
+     */
+    private $commandes;
 
     public function getId(): ?int
     {
@@ -140,6 +152,33 @@ class Product
     public function setShortDescription(?string $shortDescription): self
     {
         $this->shortDescription = $shortDescription;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Commande[]
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes[] = $commande;
+            $commande->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        if ($this->commandes->removeElement($commande)) {
+            $commande->removeProduct($this);
+        }
 
         return $this;
     }

@@ -2,10 +2,9 @@
 
 namespace App\Controller;
 
-use App\Form\PanierConfirmationType;
-use App\Handler\PanierHandler;
+use App\Service\PanierService;
 use App\Repository\ProductRepository;
-use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,75 +12,59 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PanierController extends AbstractController
 {
     protected $productRepository;
-    protected $panierHandler;
+    protected $panierService;
 
-    public function __construct(ProductRepository $productRepository, PanierHandler $panierHandler)
+    public function __construct(ProductRepository $productRepository, PanierService $panierService)
     {
         $this->productRepository = $productRepository;
-        $this->panierHandler = $panierHandler;
+        $this->panierService = $panierService;
     }
 
     #[Route('/panier/read', name: 'panier_read')]
     public function read()
     {
-        $form = $this->createForm(PanierConfirmationType::class);
-
         return $this->render('panier/read.html.twig', [
-            'items' => $this->panierHandler->getItems(),
-            'allSum' => $this->panierHandler->getAllSum(),
-            'formView' => $form->createView()
+            'lignePaniers' => $this->panierService->getLignePaniers(),
+            'totalPanier' => $this->panierService->getTotalPanier()
         ]);
     }
 
-    #[Route('/panier/add/{id}', name: 'panier_add_id', requirements: ['id' => "\d+"])]
-    public function add(
-        $id,
-        Request $request,
-    ): Response {
-        $product = $this->productRepository->find($id);
-        if (!$product) {
-            throw $this->createNotFoundException("Le produit '$id' n'existe pas ");
-        }
-
-        $this->panierHandler->add($id);
-        $this->addFlash('success', "Le produit : {$product->getName()} à été ajouter dans votre panier.");
-
-        if ($request->query->get('returnToPanier')) {
-
+    #[Route('/panier/increment/produit/{id}', name: 'panier_increment_produit_id', requirements: ['id' => "\d+"])]
+    public function incrementProduit($id): Response
+    {
+        try {
+            $product = $this->panierService->incrementProduit($id);
+            $this->addFlash('success', "Un produit : {$product->getName()} à été ajouter dans votre panier.");
+        } catch (EntityNotFoundException $error) {
+            $this->addFlash('danger', $error->getMessage());
+        } finally {
             return $this->redirectToRoute('panier_read');
-        } else {
-
-            return $this->redirectToRoute('product_read_slug', [
-                'slug' => $product->getSlug(),
-            ]);
         }
     }
 
-    #[Route('/panier/delete/{id}', name: 'panier_delete_id', requirements: ["id" => "\d+"])]
-    public function delete($id)
+    #[Route('/panier/decrement/produit/{id}', name: 'panier_decrement_produit_id', requirements: ["id" => "\d+"])]
+    public function decrementProduit($id)
     {
-        $product = $this->productRepository->find($id);
-        if (!$product) {
-            throw $this->createNotFoundException("Le produit '$id' n'existe pas ");
+        try {
+            $product = $this->panierService->decrementProduit($id);
+            $this->addFlash('warning', "Un produit : {$product->getName()} à été enlevé du panier !");
+        } catch (EntityNotFoundException $error) {
+            $this->addFlash('danger', $error->getMessage());
+        } finally {
+            return $this->redirectToRoute("panier_read");
         }
-
-        $this->panierHandler->remove($id);
-        $this->addFlash("success", "Le produit {$product->getName()} à bien été retiré du panier");
-
-        return $this->redirectToRoute("panier_read");
     }
 
-    #[Route('/panier/decrement/{id}', name: 'panier_decrement_id', requirements: ["id" => "\d+"])]
-    public function decrement($id)
+    #[Route('/panier/delete/ligne/{id}', name: 'panier_delete_ligne_id', requirements: ["id" => "\d+"])]
+    public function deleteLigne($id)
     {
-        $product = $this->productRepository->find($id);
-        if (!$product) {
-            throw $this->createNotFoundException("Le produit '$id' n'existe pas ");
+        try {
+            $product = $this->panierService->remove($id);
+            $this->addFlash("warning", "La ligne du produit {$product->getName()} à bien été retiré du panier");
+        } catch (EntityNotFoundException $error) {
+            $this->addFlash("danger", $error->getMessage());
+        } finally {
+            return $this->redirectToRoute("panier_read");
         }
-
-        $this->panierHandler->decrement($id);
-        $this->addFlash('warning', "Un produit : {$product->getName()} à été enlevé du panier !");
-
-        return $this->redirectToRoute("panier_read");
     }
 }

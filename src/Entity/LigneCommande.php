@@ -2,21 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\LigneCommandeRepository;
+use App\Entity\Product;
+use App\Entity\Commande;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LigneCommandeRepository;
 
 /**
  * @ORM\Entity(repositoryClass=LigneCommandeRepository::class)
  */
 class LigneCommande
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
+    // Attribut de Relation
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="ligneCommandes")
      */
@@ -27,6 +24,14 @@ class LigneCommande
      * @ORM\JoinColumn(nullable=false)
      */
     private $commande;
+
+    // Attribut metier
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -48,6 +53,7 @@ class LigneCommande
      */
     private $total;
 
+    // Getters et Setters
     public function getId(): ?int
     {
         return $this->id;

@@ -13,6 +13,19 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Category
 {
+    // Attribut de relation
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="category")
+     */
+    private $products;
+
+    // Constructeur
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
+
+    // Attribut métier
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -36,21 +49,6 @@ class Category
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="category")
-     */
-    private $products;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="categories")
-     */
-    private $owner;
-
-    public function __construct()
-    {
-        $this->products = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -107,18 +105,6 @@ class Category
                 $product->setCategory(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(?User $owner): self
-    {
-        $this->owner = $owner;
 
         return $this;
     }

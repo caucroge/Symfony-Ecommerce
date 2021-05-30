@@ -15,6 +15,24 @@ class Commande
     public const STATUS_PENDING = "PENDING";
     public const STATUS_PAID = 'PAID';
 
+    // Attribut de relation
+    /**
+     * @ORM\OneToMany(targetEntity=LigneCommande::class, mappedBy="commande", orphanRemoval=true)
+     */
+    private $ligneCommandes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commandes")
+     */
+    private $customer;
+
+    // Constructeur
+    public function __construct()
+    {
+        $this->ligneCommandes = new ArrayCollection();
+    }
+
+    // Attribut metier
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -53,25 +71,11 @@ class Commande
     private $status = SELF::STATUS_PENDING;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commandes")
-     */
-    private $customer;
-
-    /**
      * @ORM\Column(type="datetime", nullable=false)
      */
     private $createAt;
 
-    /**
-     * @ORM\OneToMany(targetEntity=LigneCommande::class, mappedBy="commande", orphanRemoval=true)
-     */
-    private $ligneCommandes;
-
-    public function __construct()
-    {
-        $this->ligneCommandes = new ArrayCollection();
-    }
-
+    // Getters et Setters
     public function getId(): ?int
     {
         return $this->id;
@@ -176,7 +180,7 @@ class Commande
     /**
      * @return Collection|LigneCommande[]
      */
-    public function getLigneCommandes(): Collection
+    public function getLigneCommandes(): ?Collection
     {
         return $this->ligneCommandes;
     }

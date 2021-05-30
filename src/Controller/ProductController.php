@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Product;
-use App\Form\ProductType;
+use App\Form\Type\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;

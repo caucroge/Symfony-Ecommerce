@@ -1,15 +1,17 @@
-<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>390</x><y>240</y><w>100</w><h>30</h></coordinates><panel_attributes>Product</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>600</x><y>240</y><w>100</w><h>30</h></coordinates><panel_attributes>Category</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>480</x><y>240</y><w>140</w><h>40</h></coordinates><panel_attributes>lt=-
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>380</x><y>130</y><w>100</w><h>30</h></coordinates><panel_attributes>Product</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>590</x><y>130</y><w>100</w><h>30</h></coordinates><panel_attributes>Category</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>130</y><w>140</w><h>40</h></coordinates><panel_attributes>lt=-
 m1=0..n
-m2=1..1</panel_attributes><additional_attributes>10;10;120;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>600</x><y>350</y><w>100</w><h>30</h></coordinates><panel_attributes>User</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>640</x><y>260</y><w>50</w><h>110</h></coordinates><panel_attributes>lt=-
+m2=1..1</panel_attributes><additional_attributes>10;10;120;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>590</x><y>240</y><w>100</w><h>30</h></coordinates><panel_attributes>User</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>380</x><y>240</y><w>100</w><h>30</h></coordinates><panel_attributes>Commande
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>240</y><w>140</w><h>40</h></coordinates><panel_attributes>lt=-
 m1=0..n
-m2=0..1
-</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>390</x><y>350</y><w>100</w><h>30</h></coordinates><panel_attributes>Commande
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>480</x><y>350</y><w>140</w><h>40</h></coordinates><panel_attributes>lt=-
-m1=0..n
-m2=0..1</panel_attributes><additional_attributes>10;10;120;10</additional_attributes></element><element><id>Relation</id><coordinates><x>270</x><y>230</y><w>140</w><h>80</h></coordinates><panel_attributes>lt=-
+m2=0..1</panel_attributes><additional_attributes>10;10;120;10</additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>120</y><w>140</w><h>80</h></coordinates><panel_attributes>lt=-
 m1=0..1
 m2=0..n
-</panel_attributes><additional_attributes>120;20;10;20;10;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>200</x><y>290</y><w>130</w><h>30</h></coordinates><panel_attributes>LigneCommande</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>270</x><y>310</y><w>140</w><h>80</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>120;20;10;20;10;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>190</x><y>180</y><w>130</w><h>30</h></coordinates><panel_attributes>LigneCommande</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>200</y><w>140</w><h>80</h></coordinates><panel_attributes>lt=-
 m1=0..n
 m2=1..1
-</panel_attributes><additional_attributes>10;10;10;50;120;50</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes>10;10;10;50;120;50</additional_attributes></element><element><id>Relation</id><coordinates><x>420</x><y>70</y><w>400</w><h>80</h></coordinates><panel_attributes>lt=-
+m1=1..1
+m2=0..n</panel_attributes><additional_attributes>10;60;10;10;360;10;360;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>730</x><y>130</y><w>100</w><h>30</h></coordinates><panel_attributes>LignePanier
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>680</x><y>150</y><w>140</w><h>130</h></coordinates><panel_attributes>lt=-
+m1=0..n
+m2=1..1</panel_attributes><additional_attributes>100;10;100;100;10;100</additional_attributes></element></diagram>

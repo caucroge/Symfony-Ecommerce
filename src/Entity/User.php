@@ -14,6 +14,25 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    // Attribut de relatioin
+    /**
+     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="customer")
+     */
+    private $commandes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=LignePanier::class, mappedBy="user", orphanRemoval=true, cascade={"persist", "remove"})
+     */
+    private $lignePaniers;
+
+    // Constructeur
+    public function __construct()
+    {
+        $this->commandes = new ArrayCollection();
+        $this->lignePaniers = new ArrayCollection();
+    }
+
+    // Attribut métier
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -41,22 +60,6 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $fullName;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Category::class, mappedBy="owner")
-     */
-    private $categories;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="customer")
-     */
-    private $commandes;
-
-    public function __construct()
-    {
-        $this->categories = new ArrayCollection();
-        $this->commandes = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -152,36 +155,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Category[]
-     */
-    public function getCategories(): Collection
-    {
-        return $this->categories;
-    }
-
-    public function addCategory(Category $category): self
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories[] = $category;
-            $category->setOwner($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Category $category): self
-    {
-        if ($this->categories->removeElement($category)) {
-            // set the owning side to null (unless already changed)
-            if ($category->getOwner() === $this) {
-                $category->setOwner(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Commande[]
      */
     public function getCommandes(): Collection
@@ -205,6 +178,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($commande->getCustomer() === $this) {
                 $commande->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LignePanier[]
+     */
+    public function getLignePaniers(): Collection
+    {
+        return $this->lignePaniers;
+    }
+
+    public function addLignePanier(LignePanier $lignePanier): self
+    {
+        if (!$this->lignePaniers->contains($lignePanier)) {
+            $this->lignePaniers[] = $lignePanier;
+
+            $lignePanier->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLignePanier(LignePanier $lignePanier): self
+    {
+        if ($this->lignePaniers->removeElement($lignePanier)) {
+            // set the owning side to null (unless already changed)
+            if ($lignePanier->getUser() === $this) {
+                $lignePanier->setUser(null);
             }
         }
 

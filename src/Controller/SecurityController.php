@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Form\LoginFormType;
+use App\Form\Type\LoginFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;

@@ -13,6 +13,24 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Product
 {
+    // Attribut de relation
+    /**
+     * @ORM\OneToMany(targetEntity=LigneCommande::class, mappedBy="product")
+     */
+    private $ligneCommandes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
+     */
+    private $category;
+
+    // Constructeur
+    public function __construct()
+    {
+        $this->ligneCommandes = new ArrayCollection();
+    }
+
+    // Attributs métier
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -45,11 +63,6 @@ class Product
     private $slug;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
-     */
-    private $category;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     #[Assert\Url(
@@ -69,17 +82,7 @@ class Product
     )]
     private $shortDescription;
 
-    /**
-     * @ORM\OneToMany(targetEntity=LigneCommande::class, mappedBy="product")
-     */
-    private $ligneCommandes;
-
-    public function __construct()
-    {
-        $this->commande = new ArrayCollection();
-        $this->ligneCommandes = new ArrayCollection();
-    }
-
+    // Getters et Setters
     public function getId(): ?int
     {
         return $this->id;

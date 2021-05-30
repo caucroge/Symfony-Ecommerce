@@ -30,18 +30,18 @@
         {% endfor %}
       </ul>
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a href="{{ path('panier_read') }}" class="nav-link">
-            <span>
-              <i class="fas fa-shopping-basket"></i> Panier ({{
-                panierHandler.countItems
-              }})
-            </span>
-          </a>
-        </li>
         {% if app.user %}
+          <li class="nav-item">
+            <a href="{{ path('panier_read') }}" class="nav-link">
+              <span>
+                <i class="fas fa-shopping-basket"></i> Panier ({{
+                  panierService.getCountItems()
+                }} )
+              </span>
+            </a>
+          </li>
           <li class="nav-tiem">
-            <a href="{{ path('commande_index') }}" class="nav-link">
+            <a href="{{ path('commande_list') }}" class="nav-link">
               Mes Commandes
             </a>
           </li>

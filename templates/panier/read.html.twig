@@ -5,98 +5,98 @@
 {% endblock %}
 
 {% block body %}
+  {% if lignePaniers is empty %}
+  {% set panierVide = true %}
+  {% else %}
+  {% set panierVide = false %}
+  {% endif %}
   <h1>
-    Votre Panier
-    {% if items | length == 0  %} est vide !{% endif %}
-  </h1>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>
-          Produit
-        </th>
-        <th>
-          Prix
-        </th>
-        <th>
-          Quantité
-        </th>
-        <th>
-          Total
-        </th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in items %}
+    {% if panierVide %} Votre panier est vide !
+    {% else %}
+    </h1>
+    <table class="table">
+      <thead>
         <tr>
-          <td>
-            {{ item.product.name }}
+          <th>
+            Produit
+          </th>
+          <th>
+            Prix
+          </th>
+          <th>
+            Quantité
+          </th>
+          <th>
+            Total
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for lignePanier in lignePaniers %}
+          <tr>
+            <td>
+              {{ lignePanier.name }}
+            </td>
+            <td>
+              {{ lignePanier.price }}
+            </td>
+            <td>
+              <a href="{{
+                path(
+                  'panier_increment_produit_id',
+                  {
+                    id: lignePanier.product.id
+                  }
+                )
+                }}"
+                class="btn btn-sm btn-primay">
+                <span class="fas fa-plus-square"></span>
+              </a>
+              {{ lignePanier.quantity }}
+              <a href="{{
+                path(
+                  'panier_decrement_produit_id',
+                  {
+                    id: lignePanier.product.id
+                  }
+                )
+                }}"
+                class="btn btn-sm btn-primay">
+                <span class="fas fa-minus-square"></i></span>
+              </a>
+            </td>
+            <td>
+              {{ lignePanier.total }}
+            </td>
+            <td>
+              <a href="{{
+                path(
+                  'panier_delete_ligne_id',
+                  {
+                    id: lignePanier.id
+                  }
+                )
+                }}"
+                class="btn btn-sm btn-danger">
+                <span class="fas fa-trash-alt"></span>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">
+            Total :
           </td>
           <td>
-            {{ item.product.price }}
-          </td>
-          <td>
-            <a href="{{
-              path(
-                'panier_add_id',
-                {
-                  id: item.product.id
-                }
-              )
-              }}?returnToPanier=true"
-              class="btn btn-sm btn-primay">
-              <span class="fas fa-plus-square"></span>
-            </a>
-            {{ item.quantity }}
-            <a href="{{
-              path(
-                'panier_decrement_id',
-                {
-                  id: item.product.id
-                }
-              )
-              }}"
-              class="btn btn-sm btn-primay">
-              <span class="fas fa-minus-square"></i></span>
-            </a>
-          </td>
-          <td>
-            {{ item.sum }}
-          </td>
-          <td>
-            <a href="{{
-              path(
-                'panier_delete_id',
-                {
-                  id: item.product.id
-                }
-              )
-              }}"
-              class="btn btn-sm btn-danger">
-              <span class="fas fa-trash-alt"></span>
-            </a>
+            {{ totalPanier }}
           </td>
         </tr>
-      {% endfor %}
-    </tbody>
-    <tfoot>
-      <tr>
-        <td colspan="3">
-          Total :
-        </td>
-        <td>
-          {{ allSum }}
-        </td>
-      </tr>
-    </tfoot>
-  </table>
-  {{form_start(formView, { 'action': path("commande_payer") })}}
-  <fieldset>
-    <legend>Adresse de livraison</legend>
-    {{ form_widget(formView) }}
-    {{ form_errors(formView) }}
-    <button type="submit" class="btn btn-success">Confirmer</button>
-  </fieldset>
-  {{ form_end(formView) }}
+      </tfoot>
+    </table>
+
+    <a href="{{ path('commande_create') }}" class="btn btn-success">Passer la commande</a>
+    {% endif %}
   {% endblock %}

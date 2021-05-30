@@ -1,15 +1,12 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Type;
 
 use App\Entity\Product;
 use App\Entity\Category;
-use App\Form\DataTransformer\CentimesTransformer;
-use App\Type\PriceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

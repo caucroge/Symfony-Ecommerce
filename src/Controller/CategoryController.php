@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
-use App\Form\CategoryType;
+use App\Form\Type\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;

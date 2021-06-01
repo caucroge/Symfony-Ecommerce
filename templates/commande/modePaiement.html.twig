@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Validation de la commande
+{% endblock %}
+
+{% block body %}
+  <div class="row">
+    <div class="col-6">
+      <h2>
+        Addresse de livraison
+      </h2>
+      <table class="table">
+        <tbody>
+          <tr>
+            <td class="form-check">
+              {{ address }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a href="{{ path('commande_addresse_livraison') }}"
+                class="btn btn-sm btn-info">
+                Modifier l'addresse de livraison
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <hr />
+      <h2>
+        Mode de paiement
+      </h2>
+    </div>
+    <div class="col-5 offset-1">
+      <h2>
+        Elements de la commande
+      </h2>
+      {% include 'shared/_panierLignes.html.twig' %}
+    </div>
+  </div>
+{% endblock %}

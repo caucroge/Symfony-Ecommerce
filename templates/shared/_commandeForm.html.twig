@@ -1,0 +1,15 @@
+{{
+  form_start(
+    formView,
+    {
+      action: path('commande_create')
+    }
+  )
+}}
+<h2>
+  Adresse de livraison
+</h2>
+{{ form_widget(formView) }}
+{{ form_errors(formView) }}
+<button type="submit" class="mt-5 btn btn-success">Valider la commande</button>
+{{ form_end(formView) }}

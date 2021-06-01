@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Validation de la commande
+{% endblock %}
+
+{% block body %}
+  <div class="row">
+    <div class="col-6">
+      {{ form_start(formView) }}
+      <h2>
+        Selectionner une addresse de livraison
+      </h2>
+      {{ form_widget(formView.addressLivraison) }}
+      <button type="submit" class="mt-5 btn btn-success">
+        Valider l'adresse de livraison
+      </button>
+      {{ form_end(formView) }}
+    </div>
+    <div class="col-5 offset-1">
+      <h2>
+        Elements de la commande
+      </h2>
+      {% include 'shared/_panierLignes.html.twig' %}
+    </div>
+  </div>
+{% endblock %}

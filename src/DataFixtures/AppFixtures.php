@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Address;
 use Faker\Factory;
 use App\Entity\User;
 use Faker\Generator;
@@ -57,6 +58,29 @@ class AppFixtures extends Fixture
 
             $users[] = $user;
             $manager->persist($user);
+        }
+
+        // Table Address
+        for ($i = 0; $i < 6; $i++) {
+
+            $address = new Address();
+            $address
+                ->setLibelle($faker->streetAddress())
+                ->setCodePostal($faker->postcode)
+                ->setVille($faker->city)
+                ->setPays("France")
+                ->setStatus(-1);
+
+            // Relation ManyToOne Address-->User
+            if ($i == 0) {
+                $address->setFullName($admin->getFullName());
+                $admin->addAddress($address);
+            } else {
+                $address->setFullName($users[$i - 1]->getFullName());
+                $users[$i - 1]->addAddress($address);
+            }
+
+            $manager->persist($address);
         }
 
         // Table Category
@@ -122,10 +146,6 @@ class AppFixtures extends Fixture
             $commande = new Commande();
             $commande
                 ->setCreateAt($faker->dateTime())
-                ->setFullName($faker->name())
-                ->setAddress($faker->streetAddress())
-                ->setPostalCode($faker->postcode())
-                ->setCity($faker->city())
                 ->setTotal($faker->price(6000, 60000));
 
             if ($faker->boolean(90)) {
@@ -133,7 +153,21 @@ class AppFixtures extends Fixture
             }
 
             // Relation ManyToOne Commande --> User
-            $commande->setCustomer($faker->randomElement($users));
+            /**
+             * @var User $userRandom
+             */
+            $userRandom = $faker->randomElement($users);
+            $commande
+                ->setCustomer($userRandom)
+                ->setFullName($userRandom->getFullName());
+
+            // Chaque commande contient une addresse de livraison permanente et indépendante des modifications 
+            // En premier lieu elle est obtenue via la relation OneToMany User --> Address
+            /**
+             * @var Address $AddressDelivery
+             */
+            $addressDelivery = $faker->randomElement($userRandom->getAddresses())->toArray();
+            $commande->setAddressDelivery($addressDelivery);
 
             $commandes[] = $commande;
             $manager->persist($commande);

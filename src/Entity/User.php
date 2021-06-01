@@ -30,6 +30,7 @@ class User implements UserInterface
     {
         $this->commandes = new ArrayCollection();
         $this->lignePaniers = new ArrayCollection();
+        $this->addresses = new ArrayCollection();
     }
 
     // Attribut métier
@@ -60,6 +61,11 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $fullName;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $addresses;
 
     public function getId(): ?int
     {
@@ -209,6 +215,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($lignePanier->getUser() === $this) {
                 $lignePanier->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Address[]
+     */
+    public function getAddresses(): Collection
+    {
+        return $this->addresses;
+    }
+
+    public function addAddress(Address $address): self
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses[] = $address;
+            $address->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Address $address): self
+    {
+        if ($this->addresses->removeElement($address)) {
+            // set the owning side to null (unless already changed)
+            if ($address->getUser() === $this) {
+                $address->setUser(null);
             }
         }
 

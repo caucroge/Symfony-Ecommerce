@@ -1,0 +1,83 @@
+    </h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            Produit
+          </th>
+          <th>
+            Prix
+          </th>
+          <th>
+            Quantité
+          </th>
+          <th>
+            Total
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for lignePanier in lignePaniers %}
+          <tr>
+            <td>
+              {{ lignePanier.name }}
+            </td>
+            <td>
+              {{ lignePanier.price }}
+            </td>
+            <td>
+              <a href="{{
+                path(
+                  'panier_increment_produit_id',
+                  {
+                    id: lignePanier.product.id
+                  }
+                )
+                }}"
+                class="btn btn-sm btn-primay">
+                <span class="fas fa-plus-square"></span>
+              </a>
+              {{ lignePanier.quantity }}
+              <a href="{{
+                path(
+                  'panier_decrement_produit_id',
+                  {
+                    id: lignePanier.product.id
+                  }
+                )
+                }}"
+                class="btn btn-sm btn-primay">
+                <span class="fas fa-minus-square"></i></span>
+              </a>
+            </td>
+            <td>
+              {{ lignePanier.total }}
+            </td>
+            <td>
+              <a href="{{
+                path(
+                  'panier_delete_ligne_id',
+                  {
+                    id: lignePanier.id
+                  }
+                )
+                }}"
+                class="btn btn-sm btn-danger">
+                <span class="fas fa-trash-alt"></span>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">
+            Total :
+          </td>
+          <td>
+            {{ totalPanier }}
+          </td>
+        </tr>
+      </tfoot>
+    </table>

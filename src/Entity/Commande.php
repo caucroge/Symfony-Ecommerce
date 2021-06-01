@@ -46,21 +46,6 @@ class Commande
     private $fullName;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $address;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $postalCode;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $city;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $total;
@@ -74,6 +59,11 @@ class Commande
      * @ORM\Column(type="datetime", nullable=false)
      */
     private $createAt;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $addressDelivery = [];
 
     // Getters et Setters
     public function getId(): ?int
@@ -203,6 +193,18 @@ class Commande
                 $ligneCommande->setCommande(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAddressDelivery(): ?array
+    {
+        return $this->addressDelivery;
+    }
+
+    public function setAddressDelivery(?array $addressDelivery): self
+    {
+        $this->addressDelivery = $addressDelivery;
 
         return $this;
     }

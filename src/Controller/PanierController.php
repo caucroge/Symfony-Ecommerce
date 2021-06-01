@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Service\PanierService;
-use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,12 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PanierController extends AbstractController
 {
-    protected $productRepository;
     protected $panierService;
 
-    public function __construct(ProductRepository $productRepository, PanierService $panierService)
+    public function __construct(PanierService $panierService)
     {
-        $this->productRepository = $productRepository;
         $this->panierService = $panierService;
     }
 

@@ -197,9 +197,9 @@ class Commande
         return $this;
     }
 
-    public function getAddressDelivery(): ?array
+    public function getAddressDelivery(): ?string
     {
-        return $this->addressDelivery;
+        return implode(" ", $this->addressDelivery);
     }
 
     public function setAddressDelivery(?array $addressDelivery): self

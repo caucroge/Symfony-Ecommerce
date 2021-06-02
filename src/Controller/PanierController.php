@@ -4,13 +4,15 @@ namespace App\Controller;
 
 use App\Service\PanierService;
 use Doctrine\ORM\EntityNotFoundException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PanierController extends AbstractController
 {
-    protected $panierService;
+    protected PanierService $panierService;
+    protected string $route;
 
     public function __construct(PanierService $panierService)
     {
@@ -18,8 +20,14 @@ class PanierController extends AbstractController
     }
 
     #[Route('/panier/read', name: 'panier_read')]
-    public function read()
+    public function read(Request $request)
     {
+        // Mise en session de la route courante
+        $session = $request->getSession();
+        $session->set('route', 'panier_read');
+        $session->remove('routeParameterName');
+        $session->remove('routeParameterValue');
+
         return $this->render('panier/read.html.twig', [
             'lignePaniers' => $this->panierService->getLignePaniers(),
             'totalPanier' => $this->panierService->getTotalPanier()
@@ -27,7 +35,7 @@ class PanierController extends AbstractController
     }
 
     #[Route('/panier/increment/produit/{id}', name: 'panier_increment_produit_id', requirements: ['id' => "\d+"])]
-    public function incrementProduit($id): Response
+    public function incrementProduit(int $id, Request $request): Response
     {
         try {
             $product = $this->panierService->incrementProduit($id);
@@ -35,12 +43,12 @@ class PanierController extends AbstractController
         } catch (EntityNotFoundException $error) {
             $this->addFlash('danger', $error->getMessage());
         } finally {
-            return $this->redirectToRoute('panier_read');
+            return $this->redirection($request);
         }
     }
 
     #[Route('/panier/decrement/produit/{id}', name: 'panier_decrement_produit_id', requirements: ["id" => "\d+"])]
-    public function decrementProduit($id)
+    public function decrementProduit($id, Request $request)
     {
         try {
             $product = $this->panierService->decrementProduit($id);
@@ -48,12 +56,12 @@ class PanierController extends AbstractController
         } catch (EntityNotFoundException $error) {
             $this->addFlash('danger', $error->getMessage());
         } finally {
-            return $this->redirectToRoute("panier_read");
+            return $this->redirection($request);
         }
     }
 
     #[Route('/panier/delete/ligne/{id}', name: 'panier_delete_ligne_id', requirements: ["id" => "\d+"])]
-    public function deleteLigne($id)
+    public function deleteLigne($id, Request $request)
     {
         try {
             $product = $this->panierService->remove($id);
@@ -61,7 +69,18 @@ class PanierController extends AbstractController
         } catch (EntityNotFoundException $error) {
             $this->addFlash("danger", $error->getMessage());
         } finally {
-            return $this->redirectToRoute("panier_read");
+            return $this->redirection($request);
         }
+    }
+
+    private function redirection(Request $request)
+    {
+        $route = $request->getSession()->get('route');
+        $parameterName = $request->getSession()->get('routeParameterName') ?? null;
+        $parameterValue = $request->getSession()->get('routeParameterValue') ?? null;
+
+        return $this->redirectToRoute($route, [
+            $parameterName => $parameterValue
+        ]);
     }
 }

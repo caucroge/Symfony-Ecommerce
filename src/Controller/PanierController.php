@@ -11,12 +11,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PanierController extends AbstractController
 {
-    protected PanierService $panierService;
     protected string $route;
 
-    public function __construct(PanierService $panierService)
-    {
-        $this->panierService = $panierService;
+    public function __construct(
+        private PanierService $panierService
+    ) {
     }
 
     #[Route('/panier/read', name: 'panier_read')]

@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Payer votre commande avec Stripe
+{% endblock %}
+
+{% block javascripts_librairy %}
+  {{ parent() }}
+  <script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+{% block body %}
+  <div class="row">
+    <div class="col-6">
+      <h2>
+        Addresse de livraison
+      </h2>
+      <table class="table">
+        <tbody>
+          <tr>
+            <td class="form-check">
+              {{ address|join(' ') }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a href="{{ path('commande_addresse_livraison') }}"
+                class="btn btn-sm btn-info">
+                Modifier l'addresse de livraison
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-5 offset-1">
+      <h2>
+        Elements de la commande
+      </h2>
+      {% include 'shared/_panierLignes.html.twig' %}
+      <hr />
+      <form id="payment-form">
+        <div id="card-element"><!--Stripe.js injects the Card Element--></div>
+        <button id="submit" class="btn btn-success">
+          <div class="spinner hidden" id="spinner"></div>
+          <span id="button-text">Payer votre commande</span>
+        </button>
+        <p id="card-error" role="alert"></p>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+  {{ parent() }}
+  <script>
+  const stripeSecretKey = "{{ stripeSecretKey }}";
+  const stripePublicKey = "{{ stripePublicKey }}";
+  const redirectSuccessUrl = "{{ url('commande_create') }}";
+  </script>
+  <script src="/js/payment.js"></script>
+{% endblock script %}

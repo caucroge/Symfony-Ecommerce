@@ -110,7 +110,7 @@ class PanierService
         return $product;
     }
 
-    public function remove(int $lignePanierId)
+    public function remove(int $lignePanierId): ?Product
     {
         $lignePaniers = $this->getLignePaniers();
         $product = null;
@@ -132,7 +132,16 @@ class PanierService
         return $product;
     }
 
-    public function getTotalPanier(): float
+    public function removeAll()
+    {
+        foreach ($this->getLignePaniers() as $lignePanier) {
+            $this->user->removeLignePanier($lignePanier);
+        }
+
+        $this->userRepository->updateUser($this->user);
+    }
+
+    public function getTotalPanier(): int
     {
         $total = 0;
         $lignePaniers = $this->getLignePaniers();

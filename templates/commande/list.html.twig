@@ -35,7 +35,7 @@
             {{ commande.id }}
           </td>
           <td>
-            {{ commande.addressDelivery }}
+            {{ commande.addressDelivery|join(' ') }}
           </td>
           <td>
             {{ commande.createAt|date('d/m/Y H:i') }}

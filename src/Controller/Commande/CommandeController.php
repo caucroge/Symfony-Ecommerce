@@ -5,15 +5,22 @@ namespace App\Controller\Commande;
 use App\Entity\User;
 use App\Entity\Address;
 use App\Entity\Commande;
+use App\Entity\LigneCommande;
 use App\Service\PanierService;
+use App\Service\StripeService;
 use App\Form\Type\CommandeType;
 use App\Form\Type\AddressChoiceType;
 use App\Repository\AddressRepository;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @IsGranted("ROLE_USER")
+ */
 class CommandeController extends AbstractController
 {
     // Attributs
@@ -45,14 +52,20 @@ class CommandeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $addressLivraisonId = $request->request->get('address_choice')['addressLivraison'];
+            $addressLivraison = $this->addressRepository->find($addressLivraisonId);
 
-            // Redirection Route
-            return $this->redirectToRoute('commande_mode_paiement', [
-                'addressLivraisonId' => $addressLivraisonId
-            ]);
+            // Addresse de livraison invalide
+            if (!$addressLivraison) {
+
+                $this->addFlash("danger", "L'addresse de livraison est invalide!");
+                return $this->redirectToRoute("commande_addresse_livraison");
+            }
+
+            // Addresse de livraison valide
+            $session->set('adresseLivraison', $addressLivraison->toArray());
+            return $this->redirectToRoute('commande_payment');
         }
 
-        // Page en réponse
         return $this->render(
             "commande/addressLivraison.html.twig",
             [
@@ -63,64 +76,62 @@ class CommandeController extends AbstractController
         );
     }
 
-    #[Route('/commande/modePaiement/{addressLivraisonId}', name: 'commande_mode_paiement')]
-    public function modePaiement(int $addressLivraisonId, Request $request)
+    #[Route('/commande/payment', name: 'commande_payment')]
+    public function payment(Request $request, StripeService $stripeService)
     {
         // Mise en session de la route courante
         $session = $request->getSession();
-        $session->set('route', 'commande_mode_paiement');
-        $session->set('routeParameterName', 'addressLivraisonId');
-        $session->set('routeParameterValue', $addressLivraisonId);
+        $session->set('route', 'commande_payment');
 
-        // Vérification de l'existance de l'adresse dans la table Address
-        $addressLivraison = $this->addressRepository->find($addressLivraisonId);
-        if (!$addressLivraison) {
+        $totalPanier = $this->panierService->getTotalPanier();
+        $paymentIntent = $stripeService->getPaymentIntent($totalPanier * 100);
 
-            $this->addFlash("danger", "L'addresse de livraison est invalide!");
-            return $this->redirectToRoute("commande_addresse_livraison");
-        }
-
-        return $this->render("commande/modePaiement.html.twig", [
-            'address' => $addressLivraison->toString(),
+        return $this->render("commande/payment.html.twig", [
+            'address' => $session->get('adresseLivraison'),
             'lignePaniers' => $this->panierService->getLignePaniers(),
-            'totalPanier' => $this->panierService->getTotalPanier()
+            'totalPanier' => $totalPanier,
+            'stripeSecretKey' => $paymentIntent->client_secret,
+            'stripePublicKey' => $stripeService->getPublicKey(),
         ]);
     }
 
-
     #[Route('/commande/create', name: 'commande_create')]
-    public function create(Request $request)
+    public function create(Request $request, EntityManagerInterface $em)
     {
         $commande = new Commande();
-        $form = $this->createForm(CommandeType::class, $commande);
-        $form->handleRequest($request);
+        $commande
+            ->setCustomer($this->getUser())
+            ->setFullName($this->getUser()->getFullName())
+            ->setTotal($this->panierService->getTotalPanier())
+            ->setStatus(Commande::STATUS_PAID)
+            ->setAddressDelivery($request->getSession()->get('adresseLivraison'))
+            ->setCreateAt(new \DateTime());
+        $em->persist($commande);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $lignePaniers = $this->panierService->getLignePaniers();
+        foreach ($lignePaniers as $lignePanier) {
 
-
-            return $this->redirectToRoute('commande_pay');
+            $ligneCommande = new LigneCommande();
+            $ligneCommande
+                ->setCommande($commande)
+                ->setProduct($lignePanier->getProduct())
+                ->setName($lignePanier->getName())
+                ->setPrice($lignePanier->getPrice())
+                ->setQuantity($lignePanier->getQuantity())
+                ->setTotal($lignePanier->getTotal());
+            $em->persist($ligneCommande);
         }
 
-        return $this->render(
-            "commande/create.html.twig",
-            [
-                'formView' => $form->createView(),
-                'lignePaniers' => $this->panierService->getLignePaniers(),
-                'totalPanier' => $this->panierService->getTotalPanier()
-            ]
-        );
-    }
+        $em->flush();
 
-    #[Route('/commande/pay', name: 'commande_pay')]
-    public function pay(Request $request)
-    {
-        return $this->render('commande/pay.html.twig');
+        $request->getSession()->remove('adresseLivraison');
+        $this->panierService->removeAll($this->getUser());
+
+        $this->addFlash('success', 'La commande à été payé et confirmé.');
+        return $this->redirectToRoute("commande_list");
     }
 
     #[Route('/commande/list', name: 'commande_list')]
-    /**
-     * @IsGranted("ROLE_USER")
-     */
     public function list()
     {
         /** @var User */

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Controller\Commande;
+namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Address;
 use App\Entity\Commande;
 use App\Entity\LigneCommande;
+use App\Event\PaymentSuccessEvent;
 use App\Service\PanierService;
 use App\Service\StripeService;
 use App\Form\Type\CommandeType;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -96,7 +98,7 @@ class CommandeController extends AbstractController
     }
 
     #[Route('/commande/create', name: 'commande_create')]
-    public function create(Request $request, EntityManagerInterface $em)
+    public function create(Request $request, EntityManagerInterface $em, EventDispatcherInterface $dispatcher)
     {
         $commande = new Commande();
         $commande
@@ -126,6 +128,9 @@ class CommandeController extends AbstractController
 
         $request->getSession()->remove('adresseLivraison');
         $this->panierService->removeAll($this->getUser());
+
+        $paymentSuccessEvent = new PaymentSuccessEvent($commande);
+        $dispatcher->dispatch($paymentSuccessEvent, 'payment.success');
 
         $this->addFlash('success', 'La commande à été payé et confirmé.');
         return $this->redirectToRoute("commande_list");

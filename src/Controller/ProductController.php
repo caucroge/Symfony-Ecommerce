@@ -23,15 +23,9 @@ use Symfony\Component\Validator\Constraints\NotNull;
 class ProductController extends AbstractController
 {
     #[Route('/product/read/{slug}', name: 'product_read_slug')]
-    public function readSlug(
-        $slug,
-        ProductRepository $productRepository,
-    ): Response {
-        $product = $productRepository->findOneBy(
-            [
-                'slug' => $slug
-            ]
-        );
+    public function readSlug($slug, ProductRepository $productRepository): Response
+    {
+        $product = $productRepository->findOneBy(['slug' => $slug]);
 
         if (!$product) {
             throw $this->createNotFoundException("Le produit demandé \"$slug\" n'existe pas !");

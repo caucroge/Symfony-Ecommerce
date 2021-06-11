@@ -80,6 +80,11 @@ class LigneCommande
     {
         $this->commande = $commande;
 
+        // Ajout dans l'objet commande de la ligneCommande
+        if (!$commande->getLigneCommandes()->contains($this)) {
+            $commande->addLigneCommande($this);
+        }
+
         return $this;
     }
 

@@ -104,10 +104,9 @@ class CommandeController extends AbstractController
         $commande
             ->setCustomer($this->getUser())
             ->setFullName($this->getUser()->getFullName())
-            ->setTotal($this->panierService->getTotalPanier())
             ->setStatus(Commande::STATUS_PAID)
-            ->setAddressDelivery($request->getSession()->get('adresseLivraison'))
-            ->setCreateAt(new \DateTime());
+            ->setAddressDelivery($request->getSession()->get('adresseLivraison'));
+
         $em->persist($commande);
 
         $lignePaniers = $this->panierService->getLignePaniers();

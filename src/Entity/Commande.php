@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\CommandeRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTime;
+use App\Entity\LigneCommande;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CommandeRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=CommandeRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class Commande
 {
@@ -18,6 +21,7 @@ class Commande
     // Attribut de relation
     /**
      * @ORM\OneToMany(targetEntity=LigneCommande::class, mappedBy="commande", orphanRemoval=true)
+     * @var Collection<LigneCommande>
      */
     private $ligneCommandes;
 
@@ -30,6 +34,31 @@ class Commande
     public function __construct()
     {
         $this->ligneCommandes = new ArrayCollection();
+    }
+
+    // Gestion des événements
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist()
+    {
+        if (empty($this->createAt)) {
+            $this->createAt = new DateTime();
+        }
+    }
+
+    /**
+     *@ORM\PreFlush
+     */
+    public function preFlush()
+    {
+        $total = 0;
+
+        foreach ($this->ligneCommandes as $ligneCommande) {
+            $total += $ligneCommande->getTotal();
+        }
+
+        $this->total = $total;
     }
 
     // Attribut metier

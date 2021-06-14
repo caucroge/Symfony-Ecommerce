@@ -23,13 +23,13 @@
               {{ commandeLigne.name }}
             </td>
             <td>
-              {{ commandeLigne.price }}
+              {{ commandeLigne.price | amount}}
             </td>
             <td>
               {{ commandeLigne.quantity }}
             </td>
             <td>
-              {{ commandeLigne.total }}
+              {{ commandeLigne.total | amount}}
             </td>
           </tr>
         {% endfor %}
@@ -40,7 +40,7 @@
             Total :
           </td>
           <td>
-            {{ commande.total }}
+            {{ commande.total | amount}}
           </td>
         </tr>
       </tfoot>

@@ -1,0 +1,47 @@
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            Produit
+          </th>
+          <th>
+            Prix
+          </th>
+          <th>
+            Quantité
+          </th>
+          <th>
+            Total
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for commandeLigne in commandeLignes %}
+          <tr>
+            <td>
+              {{ commandeLigne.name }}
+            </td>
+            <td>
+              {{ commandeLigne.price }}
+            </td>
+            <td>
+              {{ commandeLigne.quantity }}
+            </td>
+            <td>
+              {{ commandeLigne.total }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">
+            Total :
+          </td>
+          <td>
+            {{ commande.total }}
+          </td>
+        </tr>
+      </tfoot>
+    </table>

@@ -107,9 +107,9 @@ class CommandeController extends AbstractController
             ->setStatus(Commande::STATUS_PAID)
             ->setAddressDelivery($request->getSession()->get('adresseLivraison'));
 
-        $em->persist($commande);
-
         $lignePaniers = $this->panierService->getLignePaniers();
+
+        $totalCommande = 0;
         foreach ($lignePaniers as $lignePanier) {
 
             $ligneCommande = new LigneCommande();
@@ -120,14 +120,20 @@ class CommandeController extends AbstractController
                 ->setPrice($lignePanier->getPrice())
                 ->setQuantity($lignePanier->getQuantity())
                 ->setTotal($lignePanier->getTotal());
+            $totalCommande += $ligneCommande->getTotal();
+
             $em->persist($ligneCommande);
         }
 
+        $commande->setTotal($totalCommande);
+
+        $em->persist($commande);
         $em->flush();
 
         $request->getSession()->remove('adresseLivraison');
         $this->panierService->removeAll($this->getUser());
 
+        // Ajout évenement d'envoie d'un email lors de la confirmation du paiement de la commande
         $paymentSuccessEvent = new PaymentSuccessEvent($commande);
         $dispatcher->dispatch($paymentSuccessEvent, 'payment.success');
 

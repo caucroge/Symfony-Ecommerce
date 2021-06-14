@@ -1,0 +1,4 @@
+<h1>Visiteur : {{ commande.fullname }}</h1>
+<h2>Commande n° {{commande.id}}</h2>
+<h3>{{ commande.addressDelivery|join(' ') }}</h3>
+{% include 'shared/_commandeLignes.html.twig' %}

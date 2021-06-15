@@ -24,7 +24,7 @@
               {{ lignePanier.name }}
             </td>
             <td>
-              {{ lignePanier.price }}
+              {{ lignePanier.price | amount}}
             </td>
             <td>
               <a href="{{
@@ -52,7 +52,7 @@
               </a>
             </td>
             <td>
-              {{ lignePanier.total }}
+              {{ lignePanier.total | amount }}
             </td>
             <td>
               <a href="{{
@@ -76,7 +76,7 @@
             Total :
           </td>
           <td>
-            {{ totalPanier }}
+            {{ totalPanier | amount }}
           </td>
         </tr>
       </tfoot>

@@ -26,6 +26,11 @@ class User implements UserInterface
      */
     private $lignePaniers;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $addresses;
+
     // Constructeur
     public function __construct()
     {
@@ -62,11 +67,6 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $fullName;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user", orphanRemoval=true)
-     */
-    private $addresses;
 
     public function getId(): ?int
     {
